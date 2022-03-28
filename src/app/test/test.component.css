@@ -1,0 +1,67 @@
+.index {
+  display: flex;
+  flex-direction: column;
+  justify-items: center;
+  align-items: center;
+}
+
+Button {
+  width: 10rem;
+  height: 3rem;
+  font-size: 1rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.ffooter {
+  width: 100%;
+  position: absolute;
+  top: 30rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.tool-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.example-section {
+  margin: 12px 0;
+}
+.example-margin {
+  margin: 0 12px;
+}
+ul {
+  list-style-type: none;
+  margin-top: 4px;
+}
+
+.close-button{
+    display: flex;
+    width: 3rem;
+    position: absolute;
+    right: 1rem;
+    z-index: 999;
+}
+.close-button>button{
+    width: 3rem;
+}
+
+
+.close-button2{
+    display: flex;
+    width: 3rem;
+    position: absolute;
+    right: 3.5rem;
+    z-index: 999;
+}
+.close-button2>button{
+    width: 3rem;
+}
+
