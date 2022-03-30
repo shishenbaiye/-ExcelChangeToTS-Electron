@@ -21,3 +21,9 @@ Run `make` to package app and create a diractory named 'out'.
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+
+## Electron环境安装相关资料
+
+https://blog.csdn.net/qubernet/category_9729412.html
+<br>
+https://www.cnblogs.com/sunada2005/p/12291798.html
