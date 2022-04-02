@@ -29,3 +29,4 @@ https://blog.csdn.net/qubernet/category_9729412.html
 https://www.cnblogs.com/sunada2005/p/12291798.html
 
 ## 项目编译运行
+cnpm electron
