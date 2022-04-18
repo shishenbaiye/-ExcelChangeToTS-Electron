@@ -9,6 +9,33 @@ var btnnn = function () {
     var Arrayinterface = [];
     /** 读取到的文件名数组 */
     var _fileArray = fs.readdirSync(inputDir);
+    let oldCache;
+    try{
+        oldCache = fs.readFileSync(`${outputDir}\\ConfigCache.json`,'utf-8');
+    }catch{
+        console.log("没有缓存文件，正在生成");
+        oldCache  = [];
+    }
+    
+    let cacheJson = JSON.parse(oldCache)
+    let cacheMap = new Map();
+    for (let i = 0; i < cacheJson.length; i++) {
+        let element = cacheJson[i];
+        let table = element[0];
+        let names = element[1];
+        let types = element[2];
+        console.log("table:" + table);
+        for (let j = 0; j < types.length; j++) {
+            let name = names[j];
+            let type = types[j];
+            cacheMap.set(table+name,type);
+            console.log("    name:" + name);
+            console.log("    type:" + type);
+            console.log(`cachemap = ${cacheMap.get(table+name)}`);
+        } 
+    }
+    console.log(`cachemap = ${cacheMap.keys}`);
+
     // 去掉不合适的之后的文件名数组
     var fileArray = []
     /**属性数组 */
@@ -18,6 +45,7 @@ var btnnn = function () {
     /**属性描述 */
     let describeArray = [];
     let ArrayLanguage = [];
+    let ArrayCache = [];
     /**检查判断 */
     let checkreturn = false;
     /**下标 */
@@ -491,6 +519,7 @@ var btnnn = function () {
         ArrayContent.push(tablecontent);
         Arrayinterface.push(CreateAllforOne2(fileArray[index], objectArray[index], describeArray[index], methodArray[index]));
         ArrayLanguage.push(createLanguageduo(excel, fileArray[index]));
+        ArrayCache.push(creatTypeCache(objectArray[index],fileArray[index],methodArray[index],cacheMap));
     })
 
     console.log("开始最终写文件步骤");
@@ -500,6 +529,8 @@ var btnnn = function () {
     CreatGameConfig(AllListArray);
     /**创建每个表文件 */
     CreatTableFile(fileArray, ArrayContent, Arrayinterface, ArrayLanguage);
+    /**创建表头类型缓存文件 */
+    CreatTableType(ArrayCache);
     content = "";
     window.alert("转换完成!感谢使用!")
 }
@@ -631,10 +662,10 @@ var CreatConfigBase = function () {
         "\n\t//获取系统语言索引" +
         "\n\tprivate static getSystemLanguageIndex():number{" +
         "\n\t\tlet language = Global.GetDefaultLocale().toString().toLowerCase();" +
-        "\n\t\tif (!!language.match(\"zh\")) {" +
+        "\n\t\tif (!!language.match(\"en\")) {" +
         "\n\t\t\treturn 0;" +
         "\n\t\t}" +
-        "\n\t\tif (!!language.match(\"en\")) {" +
+        "\n\t\tif (!!language.match(\"zh\")) {" +
         "\n\t\t\treturn 1;" +
         "\n\t\t}" +
         "\n\t\tif (!!language.match(\"ja\")) {" +
@@ -734,6 +765,11 @@ var CreatTableFile = function (filsArray, arrayData, interfaceData, arrayLanguag
     })
 }
 
+var CreatTableType = function (ArrayCache) {
+        fs.writeFileSync(`${outputDir}\\ConfigCache.json`, JSON.stringify(ArrayCache));
+        console.warn(`CacheConfig.json生成完毕`);
+}
+
 /**创建interface数组 */
 var CreateAllforOne2 = function (filename, objectArray, describeArray, methodArray) {
     var temp = `export interface I${filename.replace(".xlsx", "")}Element extends IElementBase{\n //ElementAttribute } `
@@ -745,9 +781,36 @@ var CreateAllforOne2 = function (filename, objectArray, describeArray, methodArr
         if (!!item) {
             method += `\t/**${describeArray[index]}*/\n\t${item.replace(/"/g, "")}:${methodArray[index]}\n`
         }
-    })
+    });
     temp = temp.replace("//ElementAttribute", `${method}`);
     return temp;
+}
+
+/**创建表头类型数组 */
+var creatTypeCache = function (objectArray,filename,methodArray,cacheMap) {
+    console.log(`====== creatTypeCache`);
+    cacheMap.forEach((data,index)=>{
+        console.log(`cacheMap ==== ${data}`);
+    })
+    var cacheArray = [];
+    var names = [];
+    var table = filename.replace(".xlsx", "");
+    methodArray = methodArray.split(',');
+    objectArray = objectArray.split(',');
+    cacheArray.push(table); //表名
+    objectArray.forEach((item, index) => {
+        if (!!item) {
+            let name = item.replace(/"/g, "");
+            names.push(name);
+            if(cacheMap.get(table+name) && cacheMap.get(table+name)!=methodArray[index]){
+                window.alert(`注意！表${table}的${name}列类型有变化,从${cacheMap.get(table+name)}类型变为了${methodArray[index]}类型`);
+                console.warn(`注意！表${table}的${name}列类型有变化,从${cacheMap.get(table+name)}类型变为了${methodArray[index]}类型`);
+            }
+        }
+    });
+    cacheArray.push(names); //列名
+    cacheArray.push(methodArray); //列类型
+    return cacheArray;
 }
 
 /**检查数据类型是否正确 */
