@@ -36,9 +36,5 @@ export class TestComponent implements OnInit {
         Opendir(this.inputContent);
     }
 
-    chooseproject() {
-        window.alert("选择了项目路径");
-
-    }
 }
 
