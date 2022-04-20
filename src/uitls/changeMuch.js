@@ -1,64 +1,43 @@
+
+const xlsxStr = ".xlsx"
+const xlsStr = ".xls"
+const dataTypeCacheFilePath = `${outputDir}\\ConfigCache.json`
+
 var btnnn = function () {
     ClickChoose();
     /**文件列表数组 */
-    var AllListArray = [];
+    var allListArray = [];
     // Excel表格数据，一个元素就是一个Excel文件的数据
     var excelArray = [];
     /**数组内容 */
-    var ArrayContent = [];
-    var Arrayinterface = [];
+    var arrayContent = [];
+    var arrayinterface = [];
     /** 读取到的文件名数组 */
     var _fileArray = fs.readdirSync(inputDir);
-    let oldCache;
-    try{
-        oldCache = fs.readFileSync(`${outputDir}\\ConfigCache.json`,'utf-8');
-    }catch{
-        console.log("没有缓存文件，正在生成");
-        oldCache  = null;
-    }
-    
-    let cacheJson = [];
-    if(oldCache !=null){
-        cacheJson = JSON.parse(oldCache);
-    }
-    let cacheMap = new Map();
-    for (let i = 0; i < cacheJson.length; i++) {
-        let element = cacheJson[i];
-        let table = element[0];
-        let names = element[1];
-        let types = element[2];
-        console.log("table:" + table);
-        for (let j = 0; j < types.length; j++) {
-            let name = names[j];
-            let type = types[j];
-            cacheMap.set(table+name,type);
-            console.log("    name:" + name);
-            console.log("    type:" + type);
-            console.log(`cachemap = ${cacheMap.get(table+name)}`);
-        } 
-    }
-    console.log(`cachemap = ${cacheMap.keys}`);
-
+    // 数据类型的表头缓存，用于判断是否更改了类型
+    var cacheTableHeadTypeMap = new Map();
     // 去掉不合适的之后的文件名数组
     var fileArray = []
     /**属性数组 */
-    let objectArray = [];
+    var objectArray = [];
     /**类型数组 */
-    let methodArray = [];
+    var methodArray = [];
     /**属性描述 */
-    let describeArray = [];
-    let ArrayLanguage = [];
-    let ArrayCache = [];
+    var describeArray = [];
+    // 存的一行行的多语言代码
+    var arrayLanguage = [];
+    // 数据类型相关的缓存
+    var dataTypeArrayCache = [];
     /**检查判断 */
-    let checkreturn = false;
+    var checkreturn = false;
     /**下标 */
-    let Sindex = 4;
+    var Sindex = 4;
+    // 临时用数组
+    var _selectFileNameArray = [];
+    // 临时用来检查文件名重复的数组
+    var _tempMulitMap = new Map()
 
-    let xlsxStr = ".xlsx"
-    let xlsStr = ".xls"
-
-    let _selectFileNameArray = [];    // 临时用数组
-    let _tempMulitMap = new Map() // 临时用来检查文件名重复的数组
+    initCache(cacheMap)
 
     console.log("看看多少个文件：" + _fileArray.length)
 
@@ -74,7 +53,7 @@ var btnnn = function () {
         }
 
         // 容错处理，有不是Excel文件的就不继续了
-        if (item.indexOf('.xlsx') == -1 && !item.indexOf('.xls') == -1) {
+        if (item.indexOf(xlsxStr) == -1 && !item.indexOf(xlsStr) == -1) {
             window.alert(`存在非Excel文件(不是xls|xlsx结尾)`)
             isreturn = true
             return
@@ -90,12 +69,12 @@ var btnnn = function () {
         // }
 
         // 临时记录下后缀，等文件名字切割完再加回去
-        let tempXlsxStr = ".xls"
-        if (item.indexOf(".xlsx") != -1) {
-            tempXlsxStr = ".xlsx"
+        let tempXlsxStr = xlsStr
+        if (item.indexOf(xlsxStr) != -1) {
+            tempXlsxStr = xlsxStr
         }
 
-        let fileName = item.replace(".xlsx", "").replace(".xls", "")
+        let fileName = item.replace(xlsxStr, "").replace(xlsStr, "")
         if (fileName.match("_")) {
             // 跟策划协定，下划线后面的可以随意，可以用中文，所以这里要专门切割掉
             fileArray.push(fileName.split("_")[0] + tempXlsxStr)
@@ -138,7 +117,7 @@ var btnnn = function () {
     }
 
     /**校验列表文件 */
-    AllListArray = ChecktableList(_selectFileNameArray);
+    allListArray = ChecktableList(_selectFileNameArray);
 
     console.log("开始清楚空行");
     /**清除空行 */
@@ -519,23 +498,57 @@ var btnnn = function () {
                 tablecontent.push(excel[i]);
             }
         }
-        ArrayContent.push(tablecontent);
-        Arrayinterface.push(CreateAllforOne2(fileArray[index], objectArray[index], describeArray[index], methodArray[index]));
-        ArrayLanguage.push(createLanguageduo(excel, fileArray[index]));
-        ArrayCache.push(creatTypeCache(objectArray[index],fileArray[index],methodArray[index],cacheMap));
+        arrayContent.push(tablecontent);
+        arrayinterface.push(createAllforOne2(fileArray[index], objectArray[index], describeArray[index], methodArray[index]));
+        arrayLanguage.push(createLanguageduo(excel, fileArray[index]));
+        dataTypeArrayCache.push(creatTypeCache(objectArray[index], fileArray[index], methodArray[index], cacheTableHeadTypeMap));
     })
 
     console.log("开始最终写文件步骤");
     /**创建configBase */
-    CreatConfigBase()
+    creatConfigBase()
     /**创建GameConfig */
-    CreatGameConfig(AllListArray);
+    creatGameConfig(allListArray);
     /**创建每个表文件 */
-    CreatTableFile(fileArray, ArrayContent, Arrayinterface, ArrayLanguage);
+    creatTableFile(fileArray, arrayContent, arrayinterface, arrayLanguage);
     /**创建表头类型缓存文件 */
-    CreatTableType(ArrayCache);
+    cacheTableType(dataTypeArrayCache);
     content = "";
     window.alert("转换完成!感谢使用!")
+}
+
+/**
+ * 初始化表头类型的缓存
+ * 
+ * */
+var initCache = function (cacheMap) {
+    let oldCacheStr;
+    try {
+        oldCacheStr = fs.readFileSync(dataTypeCacheFilePath, 'utf-8');
+    } catch {
+        console.log("没有缓存文件，正在生成");
+        oldCacheStr = null;
+    }
+    let cacheJson = [];
+    if (oldCacheStr != null) {
+        cacheJson = JSON.parse(oldCacheStr);
+    }
+    for (let i = 0; i < cacheJson.length; i++) {
+        let element = cacheJson[i];
+        let table = element[0];
+        let names = element[1];
+        let types = element[2];
+        console.log("table:" + table);
+        for (let j = 0; j < types.length; j++) {
+            let name = names[j];
+            let type = types[j];
+            cacheMap.set(table + name, type);
+            console.log("    name:" + name);
+            console.log("    type:" + type);
+            console.log(`cachemap = ${cacheMap.get(table + name)}`);
+        }
+    }
+    console.log(`cachemap = ${cacheMap.keys}`);
 }
 
 //创建语言表便捷查询方法
@@ -552,7 +565,7 @@ var createLanguageduo = function (excel, filename) {
         if (index != null) {
             let content = '';
             for (let i = 4; i < excel.length; i++) {
-                content += `\tget ${excel[i][index]}():I${filename.replace(".xlsx", "")}Element{return this.getElement(${excel[i][0]})};\n`
+                content += `\tget ${excel[i][index]}():I${filename.replace(xlsxStr, "")}Element{return this.getElement(${excel[i][0]})};\n`
             }
             return content;
         } else {
@@ -596,7 +609,7 @@ var ChecktableList = function (listArray) {
     }
 }
 /**创建configBase */
-var CreatConfigBase = function () {
+var creatConfigBase = function () {
     let content =
         `\n//元素的基类` +
         `\nexport interface IElementBase{` +
@@ -707,7 +720,7 @@ var CreatConfigBase = function () {
     console.log("ConfigBase.ts生成完毕");
 }
 /**创建GameConfig */
-var CreatGameConfig = function (allfilename) {
+var creatGameConfig = function (allfilename) {
     let content = "";
     content += "import {ConfigBase, IElementBase} from \"./ConfigBase\";\n"
     allfilename.forEach((filename) => {
@@ -733,7 +746,7 @@ var CreatGameConfig = function (allfilename) {
     console.log("GameConfig.ts生成完毕");
 }
 /**创建每个表文件 */
-var CreatTableFile = function (filsArray, arrayData, interfaceData, arrayLanguage) {
+var creatTableFile = function (filsArray, arrayData, interfaceData, arrayLanguage) {
     //处理 坐标数组
     let arraydata = [];
     arrayData.forEach((item, index) => {
@@ -750,7 +763,7 @@ var CreatTableFile = function (filsArray, arrayData, interfaceData, arrayLanguag
         str = str.replace(req2h, ")");
         str = str.replace(req3h, ")");
         str = str.replace(req4h, ")");
-        // let datass = `const ${filsArray[index].replace(".xlsx","")}Table:Array<Array<any>> = ${str};`
+        // let datass = `const ${filsArray[index].replace(xlsxStr,"")}Table:Array<Array<any>> = ${str};`
         arraydata.push(str);
     })
 
@@ -759,23 +772,23 @@ var CreatTableFile = function (filsArray, arrayData, interfaceData, arrayLanguag
         content += `import { ConfigBase, IElementBase } from "./ConfigBase";`
         content += `\nconst EXCELDATA:Array<Array<any>> = ${arraydata[index]};\n`
         content += interfaceData[index];
-        content += `\nexport class ${filsArray[index].replace(".xlsx", "")}Config extends ConfigBase<I${filsArray[index].replace(".xlsx", "")}Element>{\n`;
+        content += `\nexport class ${filsArray[index].replace(xlsxStr, "")}Config extends ConfigBase<I${filsArray[index].replace(xlsxStr, "")}Element>{\n`;
         content += `\tconstructor(){\n\t\tsuper(EXCELDATA);\n\t}\n`;
         content += arrayLanguage[index];
         content += `\n}`
-        fs.writeFileSync(`${outputDir}\\${filsArray[index].replace(".xlsx", "")}.ts`, content);
-        console.warn(`${filsArray[index].replace(".xlsx", "")}.ts生成完毕`);
+        fs.writeFileSync(`${outputDir}\\${filsArray[index].replace(xlsxStr, "")}.ts`, content);
+        console.warn(`${filsArray[index].replace(xlsxStr, "")}.ts生成完毕`);
     })
 }
 
-var CreatTableType = function (ArrayCache) {
-        fs.writeFileSync(`${outputDir}\\ConfigCache.json`, JSON.stringify(ArrayCache));
-        console.warn(`CacheConfig.json生成完毕`);
+var cacheTableType = function (ArrayCache) {
+    fs.writeFileSync(`${outputDir}\\ConfigCache.json`, JSON.stringify(ArrayCache));
+    console.warn(`CacheConfig.json生成完毕`);
 }
 
 /**创建interface数组 */
-var CreateAllforOne2 = function (filename, objectArray, describeArray, methodArray) {
-    var temp = `export interface I${filename.replace(".xlsx", "")}Element extends IElementBase{\n //ElementAttribute } `
+var createAllforOne2 = function (filename, objectArray, describeArray, methodArray) {
+    var temp = `export interface I${filename.replace(xlsxStr, "")}Element extends IElementBase{\n //ElementAttribute } `
     var method = "";
     objectArray = objectArray.split(',');
     describeArray = describeArray.split(',');
@@ -790,14 +803,14 @@ var CreateAllforOne2 = function (filename, objectArray, describeArray, methodArr
 }
 
 /**创建表头类型数组 */
-var creatTypeCache = function (objectArray,filename,methodArray,cacheMap) {
+var creatTypeCache = function (objectArray, filename, methodArray, cacheMap) {
     console.log(`====== creatTypeCache`);
     // cacheMap.forEach((data,index)=>{
     //     console.log(`cacheMap ==== ${data}`);
     // })
     var cacheArray = [];
     var names = [];
-    var table = filename.replace(".xlsx", "");
+    var table = filename.replace(xlsxStr, "");
     methodArray = methodArray.split(',');
     objectArray = objectArray.split(',');
     cacheArray.push(table); //表名
@@ -805,9 +818,9 @@ var creatTypeCache = function (objectArray,filename,methodArray,cacheMap) {
         if (!!item) {
             let name = item.replace(/"/g, "");
             names.push(name);
-            if(cacheMap.get(table+name) && cacheMap.get(table+name)!=methodArray[index]){
-                window.alert(`注意！表${table}的${name}列类型有变化,从${cacheMap.get(table+name)}类型变为了${methodArray[index]}类型`);
-                console.warn(`注意！表${table}的${name}列类型有变化,从${cacheMap.get(table+name)}类型变为了${methodArray[index]}类型`);
+            if (cacheMap.get(table + name) && cacheMap.get(table + name) != methodArray[index]) {
+                window.alert(`注意！表${table}的${name}列类型有变化,从${cacheMap.get(table + name)}类型变为了${methodArray[index]}类型`);
+                console.warn(`注意！表${table}的${name}列类型有变化,从${cacheMap.get(table + name)}类型变为了${methodArray[index]}类型`);
             }
         }
     });
