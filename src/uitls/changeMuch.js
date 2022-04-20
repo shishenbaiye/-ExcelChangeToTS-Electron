@@ -14,10 +14,13 @@ var btnnn = function () {
         oldCache = fs.readFileSync(`${outputDir}\\ConfigCache.json`,'utf-8');
     }catch{
         console.log("没有缓存文件，正在生成");
-        oldCache  = [];
+        oldCache  = null;
     }
     
-    let cacheJson = JSON.parse(oldCache)
+    let cacheJson = [];
+    if(oldCache !=null){
+        cacheJson = JSON.parse(oldCache);
+    }
     let cacheMap = new Map();
     for (let i = 0; i < cacheJson.length; i++) {
         let element = cacheJson[i];
@@ -789,9 +792,9 @@ var CreateAllforOne2 = function (filename, objectArray, describeArray, methodArr
 /**创建表头类型数组 */
 var creatTypeCache = function (objectArray,filename,methodArray,cacheMap) {
     console.log(`====== creatTypeCache`);
-    cacheMap.forEach((data,index)=>{
-        console.log(`cacheMap ==== ${data}`);
-    })
+    // cacheMap.forEach((data,index)=>{
+    //     console.log(`cacheMap ==== ${data}`);
+    // })
     var cacheArray = [];
     var names = [];
     var table = filename.replace(".xlsx", "");
