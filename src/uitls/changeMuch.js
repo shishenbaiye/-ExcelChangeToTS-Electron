@@ -37,7 +37,7 @@ var btnnn = function () {
     // 临时用来检查文件名重复的数组
     var _tempMulitMap = new Map()
 
-    initCache(cacheMap)
+    initCache(cacheTableHeadTypeMap)
 
     console.log("看看多少个文件：" + _fileArray.length)
 
@@ -75,23 +75,29 @@ var btnnn = function () {
         }
 
         let fileName = item.replace(xlsxStr, "").replace(xlsStr, "")
+        
+        // 跟策划协定，下划线后面的可以随意，可以用中文，所以这里要专门切割掉
         if (fileName.match("_")) {
-            // 跟策划协定，下划线后面的可以随意，可以用中文，所以这里要专门切割掉
             fileArray.push(fileName.split("_")[0] + tempXlsxStr)
+
+            // 用来存储生成代码中的引用部分
+            _selectFileNameArray.push(fileName.split("_")[0])
         } else {
             fileArray.push(fileName + tempXlsxStr)
+
+            // 用来存储生成代码中的引用部分
+            _selectFileNameArray.push(fileName)
         }
 
         // 处理重复文件情况（去掉中文后缀之后，还存在重复的也不允许）
         if (_tempMulitMap.has(fileName)) {
-            window.alert(`文件名字${fileName}重复！`)
+            window.alert(`文件名字${fileName}重复（可能是下划线前面部分）！`)
             isreturn = true
             return
         } else {
             _tempMulitMap.set(fileName);
         }
 
-        _selectFileNameArray.push(fileName)
         let startParseTime = new Date().getTime()
 
 
