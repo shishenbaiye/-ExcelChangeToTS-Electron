@@ -1,10 +1,9 @@
 
 const xlsxStr = ".xlsx"
 const xlsStr = ".xls"
-const dataTypeCacheFilePath = `${outputDir}\\ConfigCache.json`
+
 
 var btnnn = function () {
-    ClickChoose();
     /**文件列表数组 */
     var allListArray = [];
     // Excel表格数据，一个元素就是一个Excel文件的数据
@@ -36,6 +35,8 @@ var btnnn = function () {
     var _selectFileNameArray = [];
     // 临时用来检查文件名重复的数组
     var _tempMulitMap = new Map()
+
+    var dirExists = false
 
     initCache(cacheTableHeadTypeMap)
 
@@ -75,7 +76,7 @@ var btnnn = function () {
         }
 
         let fileName = item.replace(xlsxStr, "").replace(xlsStr, "")
-        
+
         // 跟策划协定，下划线后面的可以随意，可以用中文，所以这里要专门切割掉
         if (fileName.match("_")) {
             fileArray.push(fileName.split("_")[0] + tempXlsxStr)
@@ -511,6 +512,12 @@ var btnnn = function () {
     })
 
     console.log("开始最终写文件步骤");
+    
+    fs.exists(outputDir, (isExists) => {
+        if (!isExists) {
+            window.alert("输出文件夹不存在！")
+        }
+    })  
     /**创建configBase */
     creatConfigBase()
     /**创建GameConfig */
@@ -528,6 +535,7 @@ var btnnn = function () {
  * 
  * */
 var initCache = function (cacheMap) {
+    const dataTypeCacheFilePath = `${outputDir}\\ConfigCache.json`
     let oldCacheStr;
     try {
         oldCacheStr = fs.readFileSync(dataTypeCacheFilePath, 'utf-8');
@@ -723,7 +731,7 @@ var creatConfigBase = function () {
         "\n\t}" +
         "\n}";
     fs.writeFileSync(`${outputDir}\\ConfigBase.ts`, content);
-    console.log("ConfigBase.ts生成完毕");
+    console.log("ConfigBase.ts生成完毕"); 
 }
 /**创建GameConfig */
 var creatGameConfig = function (allfilename) {
@@ -900,3 +908,5 @@ var check = function (method, index, excel, indexs) {
         }
     }
 }
+
+console.log("这里注册一下btnnn-changeMuch");

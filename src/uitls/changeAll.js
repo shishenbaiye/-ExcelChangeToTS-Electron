@@ -2,7 +2,6 @@ const xlsxFile = require('node-xlsx');
 var fileArr = [];
 var isreturn = false;
 var btnn = function(){
-    ClickChoose();
     /**数组内容拼接数组 */
     var AllExcelArray = [];
     var excelArray = [];
@@ -661,3 +660,5 @@ var createLanguage = function(excel,filename){
 //         }
 //     } 
 // }
+
+console.log("这里注册一下btnn-changeAll");

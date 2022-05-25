@@ -64,4 +64,7 @@ ul {
 .close-button2>button{
     width: 3rem;
 }
-
+.example-additional-selection {
+  opacity: 0.75;
+  font-size: 0.75em;
+  }

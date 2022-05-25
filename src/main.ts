@@ -8,6 +8,7 @@ import { environment } from './environments/environment';
 if (environment.production) {
   enableProdMode();
 }
+console.log("main.ts是否有运行 IKnow");
 
 platformBrowserDynamic().bootstrapModule(AppModule)
   .catch(err => console.error(err));

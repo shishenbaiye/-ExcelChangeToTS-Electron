@@ -27,13 +27,27 @@
         </mat-radio-group>
     </section>
     <h3 style="margin-top:1rem"></h3>
-   
+
     <!-- <button mat-raised-button (click)='clickChoose()' > 读 取 </button> -->
-    
-    <h4>当前配置文件目录：{{inputContent}}</h4>
+
+    <h4>{{inputContent}}</h4>
+
+    <!-- <mat-slider min="1" max="100" step="1" value="50"></mat-slider> -->
     <button mat-stroked-button style="margin-bottom: 1rem;" (click)='opendir()'>打开配置文件夹</button>
-    <button mat-raised-button color="primary" (click)='clickbtn()' matTooltip="转换前请配置路径~" aria-label="">转换</button>
-    
+    <button mat-raised-button color="primary" (click)='clickbtn()'>转换</button>
+    <!-- <button mat-raised-button color="primary" (click)='clickbtn()' matTooltip="转换前请配置路径~" aria-label="">转换</button> -->
+    <br/>
+    <div>
+        <mat-label>选择项目：</mat-label>
+        <mat-form-field appearance="fill">
+            <mat-label>项目列表</mat-label>
+            <mat-select id="selectProject" [ngModel]="selectProject"
+                (ngModelChange)="selectProject=$event;projectSelectChange()">
+                <mat-option *ngFor="let topping of toppingList" [value]="topping">{{topping}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-label style="margin-bottom: 1rem;" (click)='refreshConfigInfo()'>刷新配置</mat-label>
+    </div>
 </div>
 <!-- <div class="ffooter">
     <h3>如果觉得好用，麻烦给一个star吧！感谢各位！</h3>

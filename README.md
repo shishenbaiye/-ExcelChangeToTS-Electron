@@ -36,6 +36,8 @@ Electron是一个实时框架，允许您使用HTML5，CSS和JavaScript创建桌
 ### Angular介绍
 Angular2 是一款开源JavaScript库，由Google维护，用来协助单一页面应用程序运行。
 
+### Angular Material 
+ @angular/material 是Angular官方在 Angular 平台上实现的符合 Google Material Design 风格的组件库。
 ## 项目编译运行
 cnpm run electron
 

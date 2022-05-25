@@ -7,6 +7,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material/material.module';
 
 import { HttpClientModule} from '@angular/common/http';
+import { MatSelectModule } from '@angular/material/select';
 @NgModule({
   declarations: [
     TestComponent
@@ -16,6 +17,7 @@ import { HttpClientModule} from '@angular/common/http';
     FormsModule,
     BrowserAnimationsModule,
     MaterialModule,
+    MatSelectModule,
     HttpClientModule
   ],
   providers: [],
