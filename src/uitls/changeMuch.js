@@ -124,7 +124,7 @@ var btnnn = function () {
     }
 
     /**校验列表文件 */
-    allListArray = ChecktableList(_selectFileNameArray);
+    allListArray = _selectFileNameArray; // ChecktableList(_selectFileNameArray);
 
     console.log("开始清楚空行");
     /**清除空行 */
@@ -179,110 +179,116 @@ var btnnn = function () {
 
     console.log("开始解析属性类型");
     //属性类型描述数组
-    excelArray.forEach((obj, index) => {
-        let object = "";
-        let method = "";
-        let describe = "";
-        for (let i = 0; i < obj[0].length; i++) {
-            if (i == obj[0].length - 1) {
-                obj[0][i] = obj[0][i].toUpperCase()
-                if (obj[3][i] == `Language`) {
-                    obj[0][i] = `STRING`
-                }
-                switch (obj[0][i]) {
-                    case "INT": method += `number`
-                        break;
-                    case "STRING": method += `string`
-                        break;
-                    case "VECTOR2": method += `Type.Vector2`
-                        break;
-                    case "VECTOR3": method += `Type.Vector`
-                        break;
-                    case "VECTOR4": method += `Type.Vector4`
-                        break;
-                    case "INT[]": method += `Array<number>`
-                        break;
-                    case "STRING[]": method += 'Array<string>'
-                        break;
-                    case "INT[][]": method += `Array<Array<number>>`
-                        break;
-                    case "STRING[][]": method += `Array<Array<string>>`
-                        break;
-                    case "FLOAT": method += `number`
-                        break;
-                    case "FLOAT[]": method += `Array<number>`
-                        break;
-                    case "FLOAT[][]": method += `Array<Array<number>>`
-                        break;
-                    case "BOOLEAN": method += `boolean`
-                        break;
-                    case "BOOLEAN[]": method += `Array<boolean>`
-                        break;
-                    case "BOOLEAN[][]": method += `Array<Array<boolean>>`
-                        break;
-                    default:
-                        window.alert(`文件：${fileArray[index]}第1行第${i + 1}列变量类型填写有误，请检查后再转换！`)
-                        checkreturn = true
-                }
-                if (obj[3][i] != `ChildLanguage`) {
-                    object += `"${obj[1][i]}"`
-                    describe += `${obj[2][i]}`
-                }
-
-            } else {
-                obj[0][i] = obj[0][i].toUpperCase();
-                if (obj[3][i] == `Language`) {
-                    obj[0][i] = `STRING`
-                }
-                switch (obj[0][i]) {
-                    case "INT": method += `number,`
-                        break;
-                    case "STRING": method += `string,`
-                        break;
-                    case "VECTOR2": method += `Type.Vector2,`
-                        break;
-                    case "VECTOR3": method += `Type.Vector,`
-                        break;
-                    case "VECTOR4": method += `Type.Vector4,`
-                        break;
-                    case "INT[]": method += `Array<number>,`
-                        break;
-                    case "STRING[]": method += 'Array<string>,'
-                        break;
-                    case "INT[][]": method += `Array<Array<number>>,`
-                        break;
-                    case "STRING[][]": method += `Array<Array<string>>,`
-                        break;
-                    case "FLOAT": method += `number,`
-                        break;
-                    case "FLOAT[]": method += `Array<number>,`
-                        break;
-                    case "FLOAT[][]": method += `Array<Array<number>>,`
-                        break;
-                    case "BOOLEAN": method += `boolean,`
-                        break;
-                    case "BOOLEAN[]": method += `Array<boolean>,`
-                        break;
-                    case "BOOLEAN[][]": method += `Array<Array<boolean>>,`
-                        break;
-                    default:
-                        window.alert(`文件：${fileArray[index]}第1行第${i + 1}列变量类型填写有误，请检查后再转换！`);
-                        checkreturn = true
-                }
-                if (obj[3][i] != `ChildLanguage`) {
-                    object += `"${obj[1][i]}",`
-                    describe += `${obj[2][i]},`
+    try{
+        excelArray.forEach((obj, index) => {
+            let object = "";
+            let method = "";
+            let describe = "";
+            for (let i = 0; i < obj[0].length; i++) {
+                if (i == obj[0].length - 1) {
+                    obj[0][i] = obj[0][i].toUpperCase()
+                    if (obj[3][i] == `Language`) {
+                        obj[0][i] = `STRING`
+                    }
+                    switch (obj[0][i]) {
+                        case "INT": method += `number`
+                            break;
+                        case "STRING": method += `string`
+                            break;
+                        case "VECTOR2": method += `Type.Vector2`
+                            break;
+                        case "VECTOR3": method += `Type.Vector`
+                            break;
+                        case "VECTOR4": method += `Type.Vector4`
+                            break;
+                        case "INT[]": method += `Array<number>`
+                            break;
+                        case "STRING[]": method += 'Array<string>'
+                            break;
+                        case "INT[][]": method += `Array<Array<number>>`
+                            break;
+                        case "STRING[][]": method += `Array<Array<string>>`
+                            break;
+                        case "FLOAT": method += `number`
+                            break;
+                        case "FLOAT[]": method += `Array<number>`
+                            break;
+                        case "FLOAT[][]": method += `Array<Array<number>>`
+                            break;
+                        case "BOOLEAN": method += `boolean`
+                            break;
+                        case "BOOLEAN[]": method += `Array<boolean>`
+                            break;
+                        case "BOOLEAN[][]": method += `Array<Array<boolean>>`
+                            break;
+                        default:
+                            window.alert(`文件：${fileArray[index]}第1行第${i + 1}列变量类型填写有误，请检查后再转换！`)
+                            checkreturn = true
+                    }
+                    if (obj[3][i] != `ChildLanguage`) {
+                        object += `"${obj[1][i]}"`
+                        describe += `${obj[2][i]}`
+                    }
+    
+                } else {
+                    obj[0][i] = obj[0][i].toUpperCase();
+                    if (obj[3][i] == `Language`) {
+                        obj[0][i] = `STRING`
+                    }
+                    switch (obj[0][i]) {
+                        case "INT": method += `number,`
+                            break;
+                        case "STRING": method += `string,`
+                            break;
+                        case "VECTOR2": method += `Type.Vector2,`
+                            break;
+                        case "VECTOR3": method += `Type.Vector,`
+                            break;
+                        case "VECTOR4": method += `Type.Vector4,`
+                            break;
+                        case "INT[]": method += `Array<number>,`
+                            break;
+                        case "STRING[]": method += 'Array<string>,'
+                            break;
+                        case "INT[][]": method += `Array<Array<number>>,`
+                            break;
+                        case "STRING[][]": method += `Array<Array<string>>,`
+                            break;
+                        case "FLOAT": method += `number,`
+                            break;
+                        case "FLOAT[]": method += `Array<number>,`
+                            break;
+                        case "FLOAT[][]": method += `Array<Array<number>>,`
+                            break;
+                        case "BOOLEAN": method += `boolean,`
+                            break;
+                        case "BOOLEAN[]": method += `Array<boolean>,`
+                            break;
+                        case "BOOLEAN[][]": method += `Array<Array<boolean>>,`
+                            break;
+                        default:
+                            window.alert(`文件：${fileArray[index]}第1行第${i + 1}列变量类型填写有误，请检查后再转换！`);
+                            checkreturn = true
+                    }
+                    if (obj[3][i] != `ChildLanguage`) {
+                        object += `"${obj[1][i]}",`
+                        describe += `${obj[2][i]},`
+                    }
                 }
             }
-        }
-        objectArray.push(object);
-        methodArray.push(method);
-        describeArray.push(describe);
-    })
+            objectArray.push(object);
+            methodArray.push(method);
+            describeArray.push(describe);
+        })
+    }catch{
+        window.alert(`文件属性错误！请检查表第一行是否正确！`)
+        checkreturn = true
+    }
     if (checkreturn) {
         checkreturn = false;
         return
     }
+    
 
     console.log("开始赋值操作！");
 
@@ -674,7 +680,11 @@ var creatConfigBase = function () {
         "\n\t\t\t\t\t\tthis.KEYMAP.set(value, excelData[i + headerLine][0]);" +
         "\n\t\t\t\t\t}" +
         "\n\t\t\t\t\tif(hasTag_Language){" +
-        "\n\t\t\t\t\t\tvalue = ConfigBase.getLanguage(value);" +
+        "\n\t\t\t\t\t\tif(ConfigBase.getLanguage != null){" +
+        "\n\t\t\t\t\t\t\tvalue = ConfigBase.getLanguage(value);" +
+        "\n\t\t\t\t\t\t}else{" +
+        `\n\t\t\t\t\t\t\tvalue = "unknow"` +
+        "\n\t\t\t\t\t\t}" +
         "\n\t\t\t\t\t}" +
         "\n\t\t\t\t}" +
         "\n\t\t\t\tele[name] = value;" +
@@ -738,13 +748,14 @@ var creatGameConfig = function (allfilename) {
     let content = "";
     content += "import {ConfigBase, IElementBase} from \"./ConfigBase\";\n"
     allfilename.forEach((filename) => {
-        content += `import {${filename.name}Config} from "./${filename.name}";\n`;
+        content += `import {${filename}Config} from "./${filename}";\n`;
     })
     content += "\nexport class GameConfig{\n" +
         "\tprivate static configMap:Map<string, ConfigBase<IElementBase>> = new Map();" +
         "\n\t/**\n\t* 多语言设置\n\t* @param languageIndex 语言索引(-1为系统默认语言)\n\t* @param getLanguageFun 根据key获取语言内容的方法\n\t*/" +
         "\n\tpublic static initLanguage(languageIndex:number, getLanguageFun:(key:string|number)=>string){" +
-        "\n\t\tConfigBase.initLanguage(languageIndex, getLanguageFun)" +
+        "\n\t\tConfigBase.initLanguage(languageIndex, getLanguageFun);" +
+        "\n\t\tthis.configMap.clear();" +
         "\n\t}" +
         "\n\tprivate static getConfig<T extends ConfigBase<IElementBase>>(ConfigClass: { new(): T }): T {" +
         "\n\t\tif (!this.configMap.has(ConfigClass.name)) {" +
@@ -753,7 +764,7 @@ var creatGameConfig = function (allfilename) {
         "\n\t\treturn this.configMap.get(ConfigClass.name) as T;" +
         "\n\t}";
     allfilename.forEach((filename) => {
-        content += `\n\tpublic static get ${filename.name}():${filename.name}Config{ return this.getConfig(${filename.name}Config) };`
+        content += `\n\tpublic static get ${filename}():${filename}Config{ return this.getConfig(${filename}Config) };`
     })
     content += "\n}"
     fs.writeFileSync(`${outputDir}\\GameConfig.ts`, content);

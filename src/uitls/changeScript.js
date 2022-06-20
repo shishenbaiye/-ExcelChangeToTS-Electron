@@ -169,7 +169,7 @@ var clickCreateConfig = function () {
             }
             return `${Path}Config`
         }
-        fs.mkdirSync(`${Path}Config`, { recursive = true });
+        fs.mkdirSync(`${Path}Config`, { recursive : true });
         fs.writeFileSync(`${Path}Config\\Config.json`, content);
         window.alert(`配置文件创建成功!\n位置在${Path}Config\n请修改配置文件后再转换！`)
         console.log("创建Config文件超过");
@@ -222,7 +222,10 @@ var ReadConfigJson = function () {
     }
 }
 
-
+/**默认浏览器打开配置表说明链接 */
+var openUrl = function (url) {
+    require('child_process').exec(`start "" "${url}"`);
+}
 
 
 
