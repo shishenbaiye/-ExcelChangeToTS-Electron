@@ -711,7 +711,7 @@ var creatConfigBase = function () {
         "\n\tpublic getElement(id:number|string): T {" +
         "\n\t\tlet ele = this.ELEMENTMAP.get(Number(id)) || this.ELEMENTMAP.get(this.KEYMAP.get(String(id)));" +
         "\n\t\tif(ele == null){" +
-        "\n\t\t\tconsole.error(\"配置表中找不到元素 id:\" + id);" +
+        "\n\t\t\tconsole.error(this.constructor.name + \"配置表中找不到元素 id:\" + id);" +
         "\n\t\t}" +
         "\n\t\treturn ele;" +
         "\n\t}" +
