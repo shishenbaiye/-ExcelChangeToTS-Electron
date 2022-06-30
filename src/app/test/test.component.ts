@@ -17,7 +17,7 @@ export class TestComponent implements OnInit {
     inputContent: string = '';
     configPath: string = '';
     configContent: string = 'none';
-    labelPosition: 'newone' | 'newtwo' | 'oldone' = 'newone';
+    labelPosition: 'newone' | 'newtwo' | 'oldone' = 'newtwo';
     ngOnInit(): void {
         // 如果文件不存在，就创建配置文件
 
@@ -85,6 +85,10 @@ export class TestComponent implements OnInit {
 
     public clickRemove() {
         Taskbar();
+    }
+
+    public openConfigUrl(){
+        openUrl('https://meta.feishu.cn/docs/doccnvjXMKZ7pfcxcZl9RnlW50e');
     }
 
     opendir() {

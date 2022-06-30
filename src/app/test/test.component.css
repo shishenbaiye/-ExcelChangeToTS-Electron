@@ -67,4 +67,19 @@ ul {
 .example-additional-selection {
   opacity: 0.75;
   font-size: 0.75em;
-  }
+}
+.fill-select{
+  margin-top: 1rem;
+}
+
+.choose-div{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.refresh-button{
+  width: 100px;
+  margin-left: 0.5rem;
+}
+

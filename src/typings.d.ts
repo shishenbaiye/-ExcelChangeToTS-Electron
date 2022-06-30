@@ -9,3 +9,4 @@ declare var Opendir: any;
 declare var ReadConfigJson: any;
 declare var inputDir: any;
 declare var outputDir: any;
+declare var openUrl: any;
