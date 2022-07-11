@@ -155,7 +155,8 @@ var CreateFileContent = function (json, filename, objectArray, describeArray, me
 /**创建配置文件 */
 var clickCreateConfig = function () {
     try {
-        var jsonStr = "[\n\t{\n\t\t\"projectName\":\"ShaDouBus\",\n\t\t\"inputDir\":\"E:\\\\ConfigTest\\\\Input\\\\ConfigTable\",\n\t\t\"outputDir\":\"E:\\\\ConfigTest\\\\Output\\\\ts\"\n\t},\n\t{\n\t\t\"projectName\":\"ShaDouBus222\",\n\t\t\"inputDir\":\"E:\\\\ConfigTest\\\\Input\\\\ConfigTable\",\n\t\t\"outputDir\":\"E:\\\\ConfigTest\\\\Output\\\\ts\"\n\t}\n]"
+        var jsonStr = "[\n\t{\n\t\t\"projectName\":\"ShaDouBus\",\n\t\t\"projectRootPath\":\"E:\\\\MWLauncher_Editor\\\\MW\\\\meta\\\\WindowsNoEditor\\\\MW\\\\Saved\\\\MetaWorld\\\\Users\\\\13003741510\\\\Projects\\\\mechwars\",\n\t\t\"inputDir\":\"E:\\\\ConfigTest\\\\Input\\\\ConfigTable\",\n\t\t\"outputDir\":\"E:\\\\ConfigTest\\\\Output\\\\ts\"\n\t},\n\t{\n\t\t\"projectName\":\"ShaDouBus222\",\n\t\t\"projectRootPath\":\"E:\\\\MWLauncher_Editor\\\\MW\\\\meta\\\\WindowsNoEditor\\\\MW\\\\Saved\\\\MetaWorld\\\\Users\\\\13003741510\\\\Projects\\\\mechwars\",\n\t\t\"inputDir\":\"E:\\\\ConfigTest\\\\Input\\\\ConfigTable\",\n\t\t\"outputDir\":\"E:\\\\ConfigTest\\\\Output\\\\ts\"\n\t}\n]"
+        // var jsonStr = "[\n\t{\n\t\t\"projectName\":\"ShaDouBus\",\n\t\t\"inputDir\":\"E:\\\\ConfigTest\\\\Input\\\\ConfigTable\",\n\t\t\"outputDir\":\"E:\\\\ConfigTest\\\\Output\\\\ts\"\n\t},\n\t{\n\t\t\"projectName\":\"ShaDouBus222\",\n\t\t\"inputDir\":\"E:\\\\ConfigTest\\\\Input\\\\ConfigTable\",\n\t\t\"outputDir\":\"E:\\\\ConfigTest\\\\Output\\\\ts\"\n\t}\n]"
         // var content = "\n这是一个示例，请修改成对应的目录,修改完后删除所有文字内容。\n\n注意！\"\\\" 一定要用双斜杠!\n\n{\n\t\"inputDir\":\"C:\\\\Users\\\\Admin\\\\Desktop\\\\ConfigTable\",\n\t\"outputDir\":\"C:\\\\Users\\\\Admin\\\\Desktop\\\\ts\"\n}"
         var content = "\n这是一个示例，请修改成对应的目录,修改完后删除所有文字内容。\n\n注意！\"\\\" 一定要用双斜杠!\n\n" + jsonStr
         let Path = path.join(__dirname, '../../../../');
@@ -169,7 +170,7 @@ var clickCreateConfig = function () {
             }
             return `${Path}Config`
         }
-        fs.mkdirSync(`${Path}Config`, { recursive : true });
+        fs.mkdirSync(`${Path}Config`, { recursive: true });
         fs.writeFileSync(`${Path}Config\\Config.json`, content);
         window.alert(`配置文件创建成功!\n位置在${Path}Config\n请修改配置文件后再转换！`)
         console.log("创建Config文件超过");

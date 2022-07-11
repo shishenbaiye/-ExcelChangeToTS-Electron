@@ -2,7 +2,7 @@
 
 <div class="index" >
     <mat-toolbar class="tool-title" color="primary" style="-webkit-app-region: drag">
-        <span >Excel change to TypeScript v0.7.0</span>
+        <span >Excel change to TypeScript v0.7.1</span>
         <span class="close-button" style="-webkit-app-region: no-drag;">
             <button mat-icon-button (click)='clickClose()'>
                 <mat-icon aria-hidden="false" aria-label="close">close</mat-icon>
@@ -34,7 +34,10 @@
 
     <!-- <mat-slider min="1" max="100" step="1" value="50"></mat-slider> -->
     <button mat-stroked-button style="margin-bottom: 1rem;" (click)='opendir()'>打开配置文件夹</button>
-    <button mat-raised-button color="primary" (click)='clickbtn()'>转换</button>
+    <div class="choose-div">
+        <button mat-raised-button color="primary" (click)='clickbtn()'>配置表转换</button>
+        <button mat-raised-button color="primary" class="refresh-button" (click)='excelToTS()'>UI文件转换</button>
+    </div>
     <!-- <button mat-raised-button color="primary" (click)='clickbtn()' matTooltip="转换前请配置路径~" aria-label="">转换</button> -->
     <br/>
     <div class="choose-div">

@@ -28,6 +28,16 @@ export class TestComponent implements OnInit {
         this.refreshConfigInfo()
     }
 
+    public excelToTS() {
+        if (window.projectRootPath == null || window.projectRootPath === "") {
+            window.alert("项目路径为空，请配置projectRootPath字段");
+            return
+        }
+        startExport(window.projectRootPath)
+        window.alert("导出项目完成，请确认项目路径：" + window.projectRootPath);
+
+    }
+
     public refreshConfigInfo() {        // 获取配置文件的内容
         var configStr = ReadConfigJson()
         var configJson
@@ -41,9 +51,10 @@ export class TestComponent implements OnInit {
         for (let i = 0; i < configJson.length; i++) {
             const element = configJson[i];
             var projectName = element["projectName"]
+            var projectRootPath = element["projectRootPath"]
             var inputDir2 = element["inputDir"]
             var outputDir2 = element["outputDir"]
-            var bean = new ConfigBean(projectName, inputDir2, outputDir2)
+            var bean = new ConfigBean(projectName, projectRootPath, inputDir2, outputDir2)
             this.projectMap.set(projectName, bean)
 
             // 把项目列表展示在UI上
@@ -63,6 +74,7 @@ export class TestComponent implements OnInit {
         this.inputContent = "当前项目：" + this.selectProject
         window.inputDir = configBean?.inputDir
         window.outputDir = configBean?.outputDir
+        window.projectRootPath = configBean?.projectRootPath
     }
 
     public clickbtn() {
@@ -87,7 +99,7 @@ export class TestComponent implements OnInit {
         Taskbar();
     }
 
-    public openConfigUrl(){
+    public openConfigUrl() {
         openUrl('https://meta.feishu.cn/docs/doccnvjXMKZ7pfcxcZl9RnlW50e');
     }
 
@@ -96,4 +108,3 @@ export class TestComponent implements OnInit {
     }
 
 }
-

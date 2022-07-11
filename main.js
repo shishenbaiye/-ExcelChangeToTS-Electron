@@ -1,7 +1,7 @@
 /*
  * @Author: Gzb
  * @Date: 2021-10-29 14:37:58
- * @LastEditTime : 2022-05-20 18:07:52
+ * @LastEditTime : 2022-07-11 12:02:01
  * @LastEditors  : Shuai.Wang
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath     : \ExcelChangeToTS-Electron-main\main.js
@@ -24,7 +24,7 @@ function CreatWindow() {
             nodeIntegration: true,
             enableRemoteModule: false, // turn off remot
             contextIsolation: false,
-            preload: [path.join(__dirname, 'src/uitls/changeScript.js'), path.join(__dirname, 'src/uitls/changeAll.js'), path.join(__dirname, 'src/uitls/changeMuch.js')]
+            preload: [path.join(__dirname, 'src/uitls/UIExport.js'), path.join(__dirname, 'src/uitls/changeScript.js'), path.join(__dirname, 'src/uitls/changeAll.js'), path.join(__dirname, 'src/uitls/changeMuch.js')]
         }
     })
     win.loadFile('dist/myapp/index.html');
@@ -35,6 +35,9 @@ function CreatWindow() {
     ipc.on('hide-win', () => {
         win.minimize();
     })
+    // ipc.on('export-ui', (event, path) => {
+    //     startExport(path)
+    // })
 }
 
 app.on('ready', () => {
