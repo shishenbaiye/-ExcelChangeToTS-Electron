@@ -1,14 +1,17 @@
 import { Component, OnInit } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { ConfigBean } from "src/uitls/ConfigBean";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 
-
+const baseApi = "/api/v1/game";
 @Component({
     selector: "app-test",
     templateUrl: './test.component.html',
     styleUrls: ['./test.component.css']
 })
 export class TestComponent implements OnInit {
+
+    version: string = "";
 
     projectMap = new Map<string, ConfigBean>()
     toppings = new FormControl();
@@ -18,14 +21,30 @@ export class TestComponent implements OnInit {
     configPath: string = '';
     configContent: string = 'none';
     labelPosition: 'newone' | 'newtwo' | 'oldone' = 'newtwo';
+
+    private _headers: HttpHeaders =
+    new HttpHeaders({
+        'Content-Type': 'application/x-www-form-urlencoded'
+    });
+    constructor(private http: HttpClient){}
+
     ngOnInit(): void {
+        console.error("ngOnInit");
+        // 获取版本号
+        this.http.get(`http://api.abinsoft.com${baseApi}/syncvar?varname=version`,{headers:this._headers}).subscribe((data)=>{
+            let result = data as {code:number,msg:string,version:string}
+            console.error(result.version);
+            this.version = result.version
+        })
         // 如果文件不存在，就创建配置文件
 
         this.configPath = clickCreateConfig();
 
         createList();
 
-        this.refreshConfigInfo()
+        this.refreshConfigInfo();
+
+       
     }
 
     public excelToTS() {
