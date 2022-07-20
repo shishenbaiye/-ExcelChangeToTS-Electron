@@ -12,6 +12,8 @@ var tsTemp = `export class {ClsName} extends ViewBase {
 var tsArr = [`//工具自动生成请勿修改
 import { ViewBase } from "odin";`];
 function startExport(path) {
+    tsArr = [`//工具自动生成请勿修改
+import { ViewBase } from "odin";`];
     console.log("当前路径:" + path);
     //     console.log("1.必须先手动创建UITemplate.ts\n");
     //     console.log("2.只会导出名字以m开头的组件.ts\n");
