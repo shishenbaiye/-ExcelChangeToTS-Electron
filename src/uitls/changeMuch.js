@@ -633,7 +633,7 @@ var creatConfigBase = function () {
     let content =
         `\n//元素的基类` +
         `\nexport interface IElementBase{` +
-        `\n\tID:number;` +
+        `\n\tID:number | string;` +
         `\n}` +
         `\n//配置的基类` +
         "\nexport class ConfigBase<T extends IElementBase>{" +
@@ -719,7 +719,7 @@ var creatConfigBase = function () {
 
         "\n\t/**根据id获取一个元素*/" +
         "\n\tpublic getElement(id:number|string): T {" +
-        "\n\t\tlet ele = this.ELEMENTMAP.get(Number(id)) || this.ELEMENTMAP.get(this.KEYMAP.get(String(id)));" +
+        "\n\t\tlet ele = this.ELEMENTMAP.get(id) || this.ELEMENTMAP.get(this.KEYMAP.get(id));" +
         "\n\t\tif(ele == null){" +
         "\n\t\t\tconsole.error(this.constructor.name + \"配置表中找不到元素 id:\" + id);" +
         "\n\t\t}" +
@@ -907,6 +907,8 @@ var check = function (method, index, excel, indexs) {
                     window.alert(`文件：${fileArr[indexs]}第${j + 2}行第${index + 1}列数据格式不匹配！请修改后再转换`)
                     isreturn = true
                 }
+            }else{
+                window.alert(`文件：${fileArr[indexs]}第${j + 2}行第${index + 1}列数据格式不匹配！请修改后再转换`)
             }
         }
     }
@@ -915,6 +917,8 @@ var check = function (method, index, excel, indexs) {
             if ((typeof excel[j][index]) != "string") {
                 window.alert(`文件：${fileArr[indexs]}第${j + 2}行第${index + 1}列数据格式不匹配！请修改后再转换`)
                 isreturn = true
+            }else{
+                window.alert(`文件：${fileArr[indexs]}第${j + 2}行第${index + 1}列数据格式不匹配！请修改后再转换`)
             }
         }
     }

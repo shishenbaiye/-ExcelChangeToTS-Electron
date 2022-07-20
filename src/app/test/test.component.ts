@@ -32,9 +32,13 @@ export class TestComponent implements OnInit {
         console.error("ngOnInit");
         // 获取版本号
         this.http.get(`http://api.abinsoft.com${baseApi}/syncvar?varname=version`,{headers:this._headers}).subscribe((data)=>{
-            let result = data as {code:number,msg:string,version:string}
-            console.error(result.version);
-            this.version = result.version
+            let result = data as {code:number,msg:string,version:string}      
+            if(result.version){
+                this.version = result.version
+            }else{
+                this.version = "未知"
+            }
+            console.error(`当前版本：`,result.version);
         })
         // 如果文件不存在，就创建配置文件
 
