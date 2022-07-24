@@ -179,14 +179,18 @@ var btnnn = function () {
 
     console.log("开始解析属性类型");
     //属性类型描述数组
-    try{
         excelArray.forEach((obj, index) => {
             let object = "";
             let method = "";
             let describe = "";
             for (let i = 0; i < obj[0].length; i++) {
                 if (i == obj[0].length - 1) {
-                    obj[0][i] = obj[0][i].toUpperCase()
+                    try{
+                        obj[0][i] = obj[0][i].toUpperCase()
+                    }catch(error){
+                        window.alert(`文件：${fileArray[index]}第1行第${i + 1}列变量类型有误，请检查后再转换！`)
+                        checkreturn = true
+                    }
                     if (obj[3][i] == `Language`) {
                         obj[0][i] = `STRING`
                     }
@@ -231,7 +235,12 @@ var btnnn = function () {
                     }
     
                 } else {
-                    obj[0][i] = obj[0][i].toUpperCase();
+                    try{
+                        obj[0][i] = obj[0][i].toUpperCase();
+                    }catch(error){
+                        window.alert(`文件：${fileArray[index]}第1行第${i + 1}列变量类型有误，请检查后再转换！`)
+                        checkreturn = true
+                    }
                     if (obj[3][i] == `Language`) {
                         obj[0][i] = `STRING`
                     }
@@ -280,10 +289,6 @@ var btnnn = function () {
             methodArray.push(method);
             describeArray.push(describe);
         })
-    }catch{
-        window.alert(`文件属性错误！请检查表第一行是否正确！`)
-        checkreturn = true
-    }
     if (checkreturn) {
         checkreturn = false;
         return
@@ -643,8 +648,8 @@ var creatConfigBase = function () {
         "\n\tprivate static readonly TAG_CHILDLANGUAGE:string = 'ChildLanguage';//子语言tag" +
         "\n" +
         "\n\tprivate readonly ELEMENTARR:Array<T> = [];" +
-        "\n\tprivate readonly ELEMENTMAP:Map<number, T>  = new Map<number, T>();" +
-        "\n\tprivate readonly KEYMAP:Map<string, number> = new Map();" +
+        "\n\tprivate readonly ELEMENTMAP:Map<number | string, T> = new Map<number, T>();" +
+        "\n\tprivate readonly KEYMAP:Map<number | string, number> = new Map();" +
         "\n\tprivate static languageIndex:number = 0" +
         "\n\tprivate static getLanguage:(key:string|number)=>string;" +
         "\n" +
@@ -701,7 +706,7 @@ var creatConfigBase = function () {
         "\n\t}" +
         "\n\t//获取系统语言索引" +
         "\n\tprivate static getSystemLanguageIndex():number{" +
-        "\n\t\tlet language = Global.GetDefaultLocale().toString().toLowerCase();" +
+        "\n\t\tlet language = Global.getDefaultLocale().toString().toLowerCase();" +
         "\n\t\tif (!!language.match(\"en\")) {" +
         "\n\t\t\treturn 0;" +
         "\n\t\t}" +
@@ -857,6 +862,7 @@ var creatTypeCache = function (objectArray, filename, methodArray, cacheMap) {
 /**检查数据类型是否正确 */
 var checklist = function (excelArray) {
     excelArray.forEach((excel, index) => {
+        console.error(excel);
         for (i = 0; i < excel[0].length; i++) {
             switch (excel[0][i]) {
                 case "INT": check("int", i, excel, index)
@@ -917,8 +923,6 @@ var check = function (method, index, excel, indexs) {
             if ((typeof excel[j][index]) != "string") {
                 window.alert(`文件：${fileArr[indexs]}第${j + 2}行第${index + 1}列数据格式不匹配！请修改后再转换`)
                 isreturn = true
-            }else{
-                window.alert(`文件：${fileArr[indexs]}第${j + 2}行第${index + 1}列数据格式不匹配！请修改后再转换`)
             }
         }
     }
