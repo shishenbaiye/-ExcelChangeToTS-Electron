@@ -179,121 +179,121 @@ var btnnn = function () {
 
     console.log("开始解析属性类型");
     //属性类型描述数组
-        excelArray.forEach((obj, index) => {
-            let object = "";
-            let method = "";
-            let describe = "";
-            for (let i = 0; i < obj[0].length; i++) {
-                if (i == obj[0].length - 1) {
-                    try{
-                        obj[0][i] = obj[0][i].toUpperCase()
-                    }catch(error){
-                        window.alert(`文件：${fileArray[index]}第1行第${i + 1}列变量类型有误，请检查后再转换！`)
+    excelArray.forEach((obj, index) => {
+        let object = "";
+        let method = "";
+        let describe = "";
+        for (let i = 0; i < obj[0].length; i++) {
+            if (i == obj[0].length - 1) {
+                try {
+                    obj[0][i] = obj[0][i].toUpperCase()
+                } catch (error) {
+                    window.alert(`文件：${fileArray[index]}第1行第${i + 1}列变量类型有误，请检查后再转换！`)
+                    checkreturn = true
+                }
+                if (obj[3][i] == `Language`) {
+                    obj[0][i] = `STRING`
+                }
+                switch (obj[0][i]) {
+                    case "INT": method += `number`
+                        break;
+                    case "STRING": method += `string`
+                        break;
+                    case "VECTOR2": method += `Type.Vector2`
+                        break;
+                    case "VECTOR3": method += `Type.Vector`
+                        break;
+                    case "VECTOR4": method += `Type.Vector4`
+                        break;
+                    case "INT[]": method += `Array<number>`
+                        break;
+                    case "STRING[]": method += 'Array<string>'
+                        break;
+                    case "INT[][]": method += `Array<Array<number>>`
+                        break;
+                    case "STRING[][]": method += `Array<Array<string>>`
+                        break;
+                    case "FLOAT": method += `number`
+                        break;
+                    case "FLOAT[]": method += `Array<number>`
+                        break;
+                    case "FLOAT[][]": method += `Array<Array<number>>`
+                        break;
+                    case "BOOLEAN": method += `boolean`
+                        break;
+                    case "BOOLEAN[]": method += `Array<boolean>`
+                        break;
+                    case "BOOLEAN[][]": method += `Array<Array<boolean>>`
+                        break;
+                    default:
+                        window.alert(`文件：${fileArray[index]}第1行第${i + 1}列变量类型填写有误，请检查后再转换！`)
                         checkreturn = true
-                    }
-                    if (obj[3][i] == `Language`) {
-                        obj[0][i] = `STRING`
-                    }
-                    switch (obj[0][i]) {
-                        case "INT": method += `number`
-                            break;
-                        case "STRING": method += `string`
-                            break;
-                        case "VECTOR2": method += `Type.Vector2`
-                            break;
-                        case "VECTOR3": method += `Type.Vector`
-                            break;
-                        case "VECTOR4": method += `Type.Vector4`
-                            break;
-                        case "INT[]": method += `Array<number>`
-                            break;
-                        case "STRING[]": method += 'Array<string>'
-                            break;
-                        case "INT[][]": method += `Array<Array<number>>`
-                            break;
-                        case "STRING[][]": method += `Array<Array<string>>`
-                            break;
-                        case "FLOAT": method += `number`
-                            break;
-                        case "FLOAT[]": method += `Array<number>`
-                            break;
-                        case "FLOAT[][]": method += `Array<Array<number>>`
-                            break;
-                        case "BOOLEAN": method += `boolean`
-                            break;
-                        case "BOOLEAN[]": method += `Array<boolean>`
-                            break;
-                        case "BOOLEAN[][]": method += `Array<Array<boolean>>`
-                            break;
-                        default:
-                            window.alert(`文件：${fileArray[index]}第1行第${i + 1}列变量类型填写有误，请检查后再转换！`)
-                            checkreturn = true
-                    }
-                    if (obj[3][i] != `ChildLanguage`) {
-                        object += `"${obj[1][i]}"`
-                        describe += `${obj[2][i]}`
-                    }
-    
-                } else {
-                    try{
-                        obj[0][i] = obj[0][i].toUpperCase();
-                    }catch(error){
-                        window.alert(`文件：${fileArray[index]}第1行第${i + 1}列变量类型有误，请检查后再转换！`)
+                }
+                if (obj[3][i] != `ChildLanguage`) {
+                    object += `"${obj[1][i]}"`
+                    describe += `${obj[2][i]}`
+                }
+
+            } else {
+                try {
+                    obj[0][i] = obj[0][i].toUpperCase();
+                } catch (error) {
+                    window.alert(`文件：${fileArray[index]}第1行第${i + 1}列变量类型有误，请检查后再转换！`)
+                    checkreturn = true
+                }
+                if (obj[3][i] == `Language`) {
+                    obj[0][i] = `STRING`
+                }
+                switch (obj[0][i]) {
+                    case "INT": method += `number,`
+                        break;
+                    case "STRING": method += `string,`
+                        break;
+                    case "VECTOR2": method += `Type.Vector2,`
+                        break;
+                    case "VECTOR3": method += `Type.Vector,`
+                        break;
+                    case "VECTOR4": method += `Type.Vector4,`
+                        break;
+                    case "INT[]": method += `Array<number>,`
+                        break;
+                    case "STRING[]": method += 'Array<string>,'
+                        break;
+                    case "INT[][]": method += `Array<Array<number>>,`
+                        break;
+                    case "STRING[][]": method += `Array<Array<string>>,`
+                        break;
+                    case "FLOAT": method += `number,`
+                        break;
+                    case "FLOAT[]": method += `Array<number>,`
+                        break;
+                    case "FLOAT[][]": method += `Array<Array<number>>,`
+                        break;
+                    case "BOOLEAN": method += `boolean,`
+                        break;
+                    case "BOOLEAN[]": method += `Array<boolean>,`
+                        break;
+                    case "BOOLEAN[][]": method += `Array<Array<boolean>>,`
+                        break;
+                    default:
+                        window.alert(`文件：${fileArray[index]}第1行第${i + 1}列变量类型填写有误，请检查后再转换！`);
                         checkreturn = true
-                    }
-                    if (obj[3][i] == `Language`) {
-                        obj[0][i] = `STRING`
-                    }
-                    switch (obj[0][i]) {
-                        case "INT": method += `number,`
-                            break;
-                        case "STRING": method += `string,`
-                            break;
-                        case "VECTOR2": method += `Type.Vector2,`
-                            break;
-                        case "VECTOR3": method += `Type.Vector,`
-                            break;
-                        case "VECTOR4": method += `Type.Vector4,`
-                            break;
-                        case "INT[]": method += `Array<number>,`
-                            break;
-                        case "STRING[]": method += 'Array<string>,'
-                            break;
-                        case "INT[][]": method += `Array<Array<number>>,`
-                            break;
-                        case "STRING[][]": method += `Array<Array<string>>,`
-                            break;
-                        case "FLOAT": method += `number,`
-                            break;
-                        case "FLOAT[]": method += `Array<number>,`
-                            break;
-                        case "FLOAT[][]": method += `Array<Array<number>>,`
-                            break;
-                        case "BOOLEAN": method += `boolean,`
-                            break;
-                        case "BOOLEAN[]": method += `Array<boolean>,`
-                            break;
-                        case "BOOLEAN[][]": method += `Array<Array<boolean>>,`
-                            break;
-                        default:
-                            window.alert(`文件：${fileArray[index]}第1行第${i + 1}列变量类型填写有误，请检查后再转换！`);
-                            checkreturn = true
-                    }
-                    if (obj[3][i] != `ChildLanguage`) {
-                        object += `"${obj[1][i]}",`
-                        describe += `${obj[2][i]},`
-                    }
+                }
+                if (obj[3][i] != `ChildLanguage`) {
+                    object += `"${obj[1][i]}",`
+                    describe += `${obj[2][i]},`
                 }
             }
-            objectArray.push(object);
-            methodArray.push(method);
-            describeArray.push(describe);
-        })
+        }
+        objectArray.push(object);
+        methodArray.push(method);
+        describeArray.push(describe);
+    })
     if (checkreturn) {
         checkreturn = false;
         return
     }
-    
+
 
     console.log("开始赋值操作！");
 
@@ -523,12 +523,12 @@ var btnnn = function () {
     })
 
     console.log("开始最终写文件步骤");
-    
+
     fs.exists(outputDir, (isExists) => {
         if (!isExists) {
             window.alert("输出文件夹不存在！")
         }
-    })  
+    })
     /**创建configBase */
     creatConfigBase()
     /**创建GameConfig */
@@ -590,6 +590,7 @@ var createLanguageduo = function (excel, filename) {
         if (index != null) {
             let content = '';
             for (let i = 4; i < excel.length; i++) {
+                content += `\t/**${excel[i][3]}*/\n`;
                 content += `\tget ${excel[i][index]}():I${filename.replace(xlsxStr, "")}Element{return this.getElement(${excel[i][0]})};\n`
             }
             return content;
@@ -746,7 +747,7 @@ var creatConfigBase = function () {
         "\n\t}" +
         "\n}";
     fs.writeFileSync(`${outputDir}\\ConfigBase.ts`, content);
-    console.log("ConfigBase.ts生成完毕"); 
+    console.log("ConfigBase.ts生成完毕");
 }
 /**创建GameConfig */
 var creatGameConfig = function (allfilename) {
@@ -913,7 +914,7 @@ var check = function (method, index, excel, indexs) {
                     window.alert(`文件：${fileArr[indexs]}第${j + 2}行第${index + 1}列数据格式不匹配！请修改后再转换`)
                     isreturn = true
                 }
-            }else{
+            } else {
                 window.alert(`文件：${fileArr[indexs]}第${j + 2}行第${index + 1}列数据格式不匹配！请修改后再转换`)
             }
         }
