@@ -87,11 +87,12 @@ NameMap.set("MWProgressBar", "MWUIProgressbar");
 NameMap.set("MWTextBlock", "MWUITextblock");
 NameMap.set("MWScrollBox", "MWUIScrollBox");
 var DataPropty = /** @class */ (function () {
-    function DataPropty(name, path, type, labStr) {
+    function DataPropty(name, path, type, labStr, notExport) {
         this.name = name;
         this.path = path;
         this.type = type;
         this.labStr = labStr;
+        this.notExport = notExport;
     }
     return DataPropty;
 }());
@@ -124,6 +125,12 @@ function ParseObj(fileName, varMap, isFirst, parentPath, pkey, obj, strList) {
                     }
                     else {
                         varMap.push(new DataPropty(element, parentPath, pkey.split("_")[0], obj["文 本"]));
+                    }
+                }
+                else {
+                    var type = pkey.split("_")[0];
+                    if (type == "MWTextBlock") {
+                        varMap.push(new DataPropty(element, parentPath, type, obj["文 本"], true));
                     }
                 }
                 //console.log(parentPath, pkey);
@@ -184,6 +191,7 @@ function WriteTSFile(uiFilePath, varMap) {
     //var bindStr = "\t\t\tlet base = this.UIObject as UE.MWUIWidgetBase;\n";
     var bindStr = "";
     var focusStr = "";
+    var lanStr = "";
     var setText = "";
     varMap.forEach(function (element) {
         var newType = element.type;
@@ -191,6 +199,13 @@ function WriteTSFile(uiFilePath, varMap) {
             newType = "MWGameUI." + NameMap.get(element.type);
         } else if (perfabMap.has(element.type)) {
             newType = perfabMap.get(element.type);
+        }
+        //=========只处理语言包的情况
+        if (element.notExport) {
+            if (element.type == "MWTextBlock") {
+                lanStr += "\t\tLanUtil.setUILanguage(this.findChildByPath(" + newType + ", \"" + element.path + "\"));\n";
+            }
+            return;
         }
         propertyStr += "\tpublic " + element.name + ": " + newType + ";\n";
 
@@ -215,6 +230,7 @@ function WriteTSFile(uiFilePath, varMap) {
         }
     });
     bindStr += focusStr;
+    bindStr += lanStr;
     //bindStr += setText;
     var clsStr = tsTemp.replace("{ClsName}", ClsName);
     clsStr = clsStr.replace("{propertyStr}", propertyStr);
