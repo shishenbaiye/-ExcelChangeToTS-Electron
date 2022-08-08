@@ -308,7 +308,7 @@ var btnnn = function () {
         checkreturn = false;
         return
     }
-    
+
 
     console.log("开始赋值操作！");
 
@@ -538,12 +538,12 @@ var btnnn = function () {
     })
 
     console.log("开始最终写文件步骤");
-    
+
     fs.exists(outputDir, (isExists) => {
         if (!isExists) {
             window.alert("输出文件夹不存在！")
         }
-    })  
+    })
     /**创建configBase */
     creatConfigBase()
     /**创建GameConfig */
@@ -605,6 +605,7 @@ var createLanguageduo = function (excel, filename) {
         if (index != null) {
             let content = '';
             for (let i = 4; i < excel.length; i++) {
+                content += `\t/**${excel[i][3]}*/\n`;
                 content += `\tget ${excel[i][index]}():I${filename.replace(xlsxStr, "")}Element{return this.getElement(${excel[i][0]})};\n`
             }
             return content;
@@ -786,7 +787,7 @@ var creatConfigBase = function () {
         "\n\t}" +
         "\n}";
     fs.writeFileSync(`${outputDir}\\ConfigBase.ts`, content);
-    console.log("ConfigBase.ts生成完毕"); 
+    console.log("ConfigBase.ts生成完毕");
 }
 /**创建GameConfig */
 var creatGameConfig = function (allfilename) {

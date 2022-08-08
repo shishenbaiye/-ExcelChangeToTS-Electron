@@ -9,12 +9,15 @@ var tsTemp = `export class {ClsName} extends ViewBase {
 {bindStr}
     }
 }`;
+var perfabMap = new Map();
 var tsArr = [`//工具自动生成请勿修改
 import { ViewBase } from "odin";`];
 function startExport(path) {
+
     tsArr = [`//工具自动生成请勿修改
 import { ViewBase } from "odin";`];
-    console.log("当前路径:" + path);
+    tsArr.push("import { GameConfig } from \"./gameConfig/GameConfig\";\nexport namespace LanUtil {\n\texport function setUILanguage(ui: MWGameUI.MWUIButton | MWGameUI.MWUITextblock) {\n\t\tlet key: string = null;\n\t\tif (ui instanceof MWGameUI.MWUIButton) {\n\t\t\tkey = ui.getButtonString();\n\t\t}\n\t\telse {\n\t\t\tkey = ui.getText();\n\t\t}\n\n\t\tif (key) {\n\t\t\tlet lan = GameConfig.LangueConfig.getElement(key);\n\t\t\tif (lan) {\n\t\t\t\tif (ui instanceof MWGameUI.MWUIButton) {\n\t\t\t\t\tui.setButtonString(lan.Value)\n\t\t\t\t}\n\t\t\t\telse {\n\t\t\t\t\tui.setText(lan.Value);\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n}");
+    //console.log("当前路径:" + path);
     //     console.log("1.必须先手动创建UITemplate.ts\n");
     //     console.log("2.只会导出名字以m开头的组件.ts\n");
     checkWorkspace(path).then(function (fileList) {
@@ -59,10 +62,15 @@ function GetUIFiles(parentPath) {
             ret = ret.concat(GetUIFiles(currentPath));
             continue;
         }
+        var url = (parentPath + "/" + files[i]).replace("//", "/");
+        if (files[i].endsWith(".uiprefab.meta") || files[i].endsWith(".ui.meta")) {
+            ParseMetaFile(url);
+            continue;
+        }
         if (files[i].endsWith(".uiprefab") == false && files[i].endsWith(".ui") == false) {
             continue;
         }
-        ret.push((parentPath + "/" + files[i]).replace("//", "/"));
+        ret.push(url);
         //if (files[i].indexOf(".uiprefab") === -1 || files[i] === "Main.ui" || files[i].indexOf(".meta") != -1) continue;
     }
     return ret;
@@ -79,11 +87,12 @@ NameMap.set("MWProgressBar", "MWUIProgressbar");
 NameMap.set("MWTextBlock", "MWUITextblock");
 NameMap.set("MWScrollBox", "MWUIScrollBox");
 var DataPropty = /** @class */ (function () {
-    function DataPropty(name, path, type, labStr) {
+    function DataPropty(name, path, type, labStr, notExport) {
         this.name = name;
         this.path = path;
         this.type = type;
         this.labStr = labStr;
+        this.notExport = notExport;
     }
     return DataPropty;
 }());
@@ -109,7 +118,20 @@ function ParseObj(fileName, varMap, isFirst, parentPath, pkey, obj, strList) {
                 }
                 if (String(element).charAt(0) == String(element).charAt(0).toLowerCase()) {
                     //if (String(element).startsWith("MW") == false) {
-                    varMap.push(new DataPropty(element, parentPath, pkey.split("_")[0], obj["文 本"]));
+                    // varMap.push(new DataPropty(element, parentPath, pkey.split("_")[0], obj["文 本"]));
+                    if (pkey.startsWith("Prefab_")) {
+                        var type = pkey.substring(0, pkey.lastIndexOf("_"));
+                        varMap.push(new DataPropty(element, parentPath, type, obj["文 本"]));
+                    }
+                    else {
+                        varMap.push(new DataPropty(element, parentPath, pkey.split("_")[0], obj["文 本"]));
+                    }
+                }
+                else {
+                    var type = pkey.split("_")[0];
+                    if (type == "MWTextBlock") {
+                        varMap.push(new DataPropty(element, parentPath, type, obj["文 本"], true));
+                    }
                 }
                 //console.log(parentPath, pkey);
             }
@@ -169,28 +191,46 @@ function WriteTSFile(uiFilePath, varMap) {
     //var bindStr = "\t\t\tlet base = this.UIObject as UE.MWUIWidgetBase;\n";
     var bindStr = "";
     var focusStr = "";
+    var lanStr = "";
     var setText = "";
     varMap.forEach(function (element) {
         var newType = element.type;
         if (NameMap.has(element.type)) {
             newType = "MWGameUI." + NameMap.get(element.type);
+        } else if (perfabMap.has(element.type)) {
+            newType = perfabMap.get(element.type);
+        }
+        //=========只处理语言包的情况
+        if (element.notExport) {
+            if (element.type == "MWTextBlock") {
+                lanStr += "\t\tLanUtil.setUILanguage(this.findChildByPath(" + newType + ", \"" + element.path + "\"));\n";
+            }
+            return;
         }
         propertyStr += "\tpublic " + element.name + ": " + newType + ";\n";
-        bindStr += "\t\tthis." + element.name + " = this.findChildByPath(" + newType + ", \"" + element.path + "\");\n";
+
         if (element.type == "MWButton") {
-            //focusStr += `\t\tthis.${element.name}.SetFocusable(false);` + "\n";
+            bindStr += "\t\tthis." + element.name + " = this.findChildByPath(" + newType + ", \"" + element.path + "\");\n";
+
             focusStr += "\t\tthis." + element.name + ".onClicked().add(() => {\n\t\t\tEvents.dispatchLocal(\"PlayButtonClick\", \"" + element.name + "\");\n\t\t});\n";
-            // if (element.labStr != null && element.labStr != "") {
-            //     setText += `\t\t\tthis.${element.name}.SetButtonString("未设置");` + "\n";
-            // }
+            focusStr += `\t\tLanUtil.setUILanguage(this.${element.name});\n`
         }
         else if (element.type == "MWTextBlock") {
-            // if (element.labStr != null && element.labStr != "") {
-            //     setText += `\t\t\tthis.${element.name}.SetText("未设置");` + "\n";
-            // }
+
+            bindStr += "\t\tthis." + element.name + " = this.findChildByPath(" + newType + ", \"" + element.path + "\");\n";
+            focusStr += `\t\tLanUtil.setUILanguage(this.${element.name});\n`
+        }
+        else if (element.type.startsWith("Prefab")) {
+            bindStr += "\t\tthis." + element.name + " = new " + newType + "();\n";
+            bindStr += "\t\tthis." + element.name + "[\"prefab\"] = this.findChildByPath(MWGameUI.MWUIUserWidgetPrefab, \"" + element.path + "\");\n";
+            bindStr += "\t\tthis." + element.name + ".buildSelf();\n";
+        }
+        else {
+            bindStr += "\t\tthis." + element.name + " = this.findChildByPath(" + newType + ", \"" + element.path + "\");\n";
         }
     });
     bindStr += focusStr;
+    bindStr += lanStr;
     //bindStr += setText;
     var clsStr = tsTemp.replace("{ClsName}", ClsName);
     clsStr = clsStr.replace("{propertyStr}", propertyStr);
@@ -205,7 +245,27 @@ function WriteTSFile(uiFilePath, varMap) {
     tsArr.push(clsStr);
 }
 
-
+function ParseMetaFile(uiFilePath) {
+    console.log("###开始解析:" + uiFilePath);
+    var data = fs.readFileSync(uiFilePath, { encoding: "utf-8" });
+    if (data.charAt(0) == '�') {
+        data = fs.readFileSync(uiFilePath, { encoding: "utf16le" });
+    }
+    if (data) {
+        data = data.replace(/\t/g, "");
+        data = data.replace(/\r/g, "");
+        data = data.replace(/\n/g, "");
+        try {
+            var index = data.indexOf('{', 0);
+            data = data.substring(index);
+            var jsonData = JSON.parse(data);
+            perfabMap.set("Prefab_" + jsonData["Guid"], "UI_" + jsonData["Name"].split(".")[0]);
+        }
+        catch (error) {
+            console.log(uiFilePath + "\u7F16\u7801\u4E0D\u5BF9\uFF01\uFF01\uFF01\uFF01\uFF01\uFF01\uFF01\uFF01");
+        }
+    }
+}
 function GetFileNameByPath(path) {
     var arr = path.split("/");
     if (arr) {
