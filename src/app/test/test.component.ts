@@ -11,7 +11,7 @@ const baseApi = "/api/v1/game";
 })
 export class TestComponent implements OnInit {
 
-    version: string = "";
+    version: string = "0.7.3";
 
     projectMap = new Map<string, ConfigBean>()
     toppings = new FormControl();
@@ -34,11 +34,11 @@ export class TestComponent implements OnInit {
         this.http.get(`http://api.abinsoft.com${baseApi}/syncvar?varname=version`,{headers:this._headers}).subscribe((data)=>{
             let result = data as {code:number,msg:string,version:string}      
             if(result.version){
-                this.version = result.version
+                console.error(`当前版本：`,this.version);
             }else{
-                this.version = "未知"
+                console.error(`接口错误！`);
             }
-            console.error(`当前版本：`,result.version);
+            
         })
         // 如果文件不存在，就创建配置文件
 

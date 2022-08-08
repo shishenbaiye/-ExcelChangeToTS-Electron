@@ -178,11 +178,13 @@ var btnnn = function () {
     }
 
     console.log("开始解析属性类型");
+    console.warn(excelArray);
     //属性类型描述数组
         excelArray.forEach((obj, index) => {
             let object = "";
             let method = "";
             let describe = "";
+            console.warn(obj);
             for (let i = 0; i < obj[0].length; i++) {
                 if (i == obj[0].length - 1) {
                     try{
@@ -190,10 +192,14 @@ var btnnn = function () {
                     }catch(error){
                         window.alert(`文件：${fileArray[index]}第1行第${i + 1}列变量类型有误，请检查后再转换！`)
                         checkreturn = true
+                        return;
                     }
-                    if (obj[3][i] == `Language`) {
-                        obj[0][i] = `STRING`
-                    }
+                    if(obj.length>3){
+                        if (obj[3][i] == `Language`) {
+                            obj[0][i] = `STRING`
+                        }
+                    }  
+                    console.warn(obj[0][i]);
                     switch (obj[0][i]) {
                         case "INT": method += `number`
                             break;
@@ -228,21 +234,26 @@ var btnnn = function () {
                         default:
                             window.alert(`文件：${fileArray[index]}第1行第${i + 1}列变量类型填写有误，请检查后再转换！`)
                             checkreturn = true
+                            return;
                     }
-                    if (obj[3][i] != `ChildLanguage`) {
-                        object += `"${obj[1][i]}"`
-                        describe += `${obj[2][i]}`
+                    if(obj.length>3){
+                        if (obj[3][i] != `ChildLanguage`) {
+                            object += `"${obj[1][i]}"`
+                            describe += `${obj[2][i]}`
+                        }
                     }
-    
                 } else {
                     try{
                         obj[0][i] = obj[0][i].toUpperCase();
                     }catch(error){
                         window.alert(`文件：${fileArray[index]}第1行第${i + 1}列变量类型有误，请检查后再转换！`)
                         checkreturn = true
+                        return
                     }
-                    if (obj[3][i] == `Language`) {
-                        obj[0][i] = `STRING`
+                    if(obj.length>3){
+                        if (obj[3][i] == `Language`) {
+                            obj[0][i] = `STRING`
+                        }
                     }
                     switch (obj[0][i]) {
                         case "INT": method += `number,`
@@ -278,17 +289,21 @@ var btnnn = function () {
                         default:
                             window.alert(`文件：${fileArray[index]}第1行第${i + 1}列变量类型填写有误，请检查后再转换！`);
                             checkreturn = true
+                            return
                     }
-                    if (obj[3][i] != `ChildLanguage`) {
-                        object += `"${obj[1][i]}",`
-                        describe += `${obj[2][i]},`
-                    }
+                    if(obj.length>3){
+                        if (obj[3][i] != `ChildLanguage`) {
+                            object += `"${obj[1][i]}",`
+                            describe += `${obj[2][i]},`
+                        }
+                    }   
                 }
             }
             objectArray.push(object);
             methodArray.push(method);
             describeArray.push(describe);
         })
+    console.warn(`objectArray`);
     if (checkreturn) {
         checkreturn = false;
         return
@@ -304,7 +319,7 @@ var btnnn = function () {
             if (excel[0][j] == "VECTOR2") {
                 for (let i = Sindex; i < excel.length; i++) {
                     if (!excel[i][j]) {
-                        excel[i][j] = ""
+                        excel[i][j] = null
                     } else {
                         excel[i][j] = excel[i][j].replace(/\|/g, ",");
                         excel[i][j] = "2$" + excel[i][j] + "$2";
@@ -314,7 +329,7 @@ var btnnn = function () {
             if (excel[0][j] == "VECTOR3") {
                 for (let i = Sindex; i < excel.length; i++) {
                     if (!excel[i][j]) {
-                        excel[i][j] = ""
+                        excel[i][j] = null
                     } else {
                         excel[i][j] = excel[i][j].replace(/\|/g, ",");
                         excel[i][j] = "3$" + excel[i][j] + "$3";
@@ -324,7 +339,7 @@ var btnnn = function () {
             if (excel[0][j] == "VECTOR4") {
                 for (let i = Sindex; i < excel.length; i++) {
                     if (!excel[i][j]) {
-                        excel[i][j] = ""
+                        excel[i][j] = null
                     } else {
                         excel[i][j] = excel[i][j].replace(/\|/g, ",");
                         excel[i][j] = "4$" + excel[i][j] + "$4";
@@ -638,7 +653,7 @@ var creatConfigBase = function () {
     let content =
         `\n//元素的基类` +
         `\nexport interface IElementBase{` +
-        `\n\tID:number | string;` +
+        `\n\tid:number;` +
         `\n}` +
         `\n//配置的基类` +
         "\nexport class ConfigBase<T extends IElementBase>{" +
@@ -648,7 +663,7 @@ var creatConfigBase = function () {
         "\n\tprivate static readonly TAG_CHILDLANGUAGE:string = 'ChildLanguage';//子语言tag" +
         "\n" +
         "\n\tprivate readonly ELEMENTARR:Array<T> = [];" +
-        "\n\tprivate readonly ELEMENTMAP:Map<number | string, T> = new Map<number, T>();" +
+        "\n\tprivate readonly ELEMENTMAP:Map<number, T> = new Map<number, T>();" +
         "\n\tprivate readonly KEYMAP:Map<number | string, number> = new Map();" +
         "\n\tprivate static languageIndex:number = 0" +
         "\n\tprivate static getLanguage:(key:string|number)=>string;" +
@@ -722,22 +737,47 @@ var creatConfigBase = function () {
         "\n\t\treturn 0;" +
         "\n\t}" +
 
-        "\n\t/**根据id获取一个元素*/" +
+        "\n\t/**" +
+        "\n\t* 根据id获取一个元素"+
+        "\n\t* @param id id|key"+
+        "\n\t* @returns Element"+
+        "\n\t*/"+
         "\n\tpublic getElement(id:number|string): T {" +
-        "\n\t\tlet ele = this.ELEMENTMAP.get(id) || this.ELEMENTMAP.get(this.KEYMAP.get(id));" +
+        "\n\t\tlet ele = this.ELEMENTMAP.get(Number(id)) || this.ELEMENTMAP.get(this.KEYMAP.get(id));" +
         "\n\t\tif(ele == null){" +
         "\n\t\t\tconsole.error(this.constructor.name + \"配置表中找不到元素 id:\" + id);" +
         "\n\t\t}" +
         "\n\t\treturn ele;" +
         "\n\t}" +
 
-        "\n\t/**根据key,value查找一个元素*/" +
-        "\n\tpublic findElement(key:string, value:any): T{" +
+        "\n\t/**" +
+        "\n\t* 根据字段名和字段值查找一个元素"+
+        "\n\t* @param fieldName 字段名"+
+        "\n\t* @param fieldValue 字段值"+
+        "\n\t* @returns 第一个找到的Element"+
+        "\n\t*/"+ 
+        "\n\tpublic findElement(fieldName:string, fieldValue:any): T{" +
         "\n\t\tfor(let i = 0; i < this.ELEMENTARR.length; i++){" +
-        "\n\t\t\tif(this.ELEMENTARR[i][key] == value){" +
+        "\n\t\t\tif(this.ELEMENTARR[i][fieldName] == fieldValue){" +
         "\n\t\t\t\treturn this.ELEMENTARR[i];" +
         "\n\t\t\t}" +
         "\n\t\t}" +
+        "\n\t}" +
+
+        "\n\t/**" +
+        "\n\t* 根据字段名和字段值查找一组元素"+
+        "\n\t* @param fieldName 字段名"+
+        "\n\t* @param fieldValue 字段值"+
+        "\n\t* @returns 所有符合要求的Element"+
+        "\n\t*/"+ 
+        "\n\tpublic findElements(fieldName:string,fieldValue:any):Array<T>{" +
+        "\n\t\tlet arr:Array<T> = [];"+
+        "\n\t\tfor(let i = 0;i < this.ELEMENTARR.length;i++){"+
+        "\n\t\t\tif(this.ELEMENTARR[i][fieldName] == fieldValue){"+
+        "\n\t\t\t\tarr.push(this.ELEMENTARR[i]);"+
+        "\n\t\t\t}"+
+        "\n\t\t}"+
+        "\n\t\treturn arr;"+
         "\n\t}" +
 
         "\n\t/**获取所有元素*/" +
@@ -861,11 +901,12 @@ var creatTypeCache = function (objectArray, filename, methodArray, cacheMap) {
 
 /**检查数据类型是否正确 */
 var checklist = function (excelArray) {
+    console.log(`====== checklist`);
     excelArray.forEach((excel, index) => {
-        console.error(excel);
+        if(excel.length < 4){return}
         for (i = 0; i < excel[0].length; i++) {
             switch (excel[0][i]) {
-                case "INT": check("int", i, excel, index)
+                case "INT": check("int", i, excel, index);
                     break;
                 case "STRING": check("string", i, excel, index)
                     break;
@@ -909,12 +950,18 @@ var check = function (method, index, excel, indexs) {
         for (j = 4; j < excel.length; j++) {
             if ((typeof excel[j][index]) == "number") {
                 if (excel[j][index] % 1 != 0) {
+                    console.log(typeof excel[j][index]);
                     console.log(indexs, j, index);
-                    window.alert(`文件：${fileArr[indexs]}第${j + 2}行第${index + 1}列数据格式不匹配！请修改后再转换`)
-                    isreturn = true
+                    window.alert(`文件：${fileArr[indexs]}第${j + 2}行第${index + 1}列数据格式不匹配！请修改后再转换`);
+                    isreturn = true;
+                    return ;
                 }
             }else{
+                console.log(indexs, j, index);
+                console.log(typeof excel[j][index]);
                 window.alert(`文件：${fileArr[indexs]}第${j + 2}行第${index + 1}列数据格式不匹配！请修改后再转换`)
+                isreturn = true;
+                return ;
             }
         }
     }
@@ -922,10 +969,12 @@ var check = function (method, index, excel, indexs) {
         for (j = 4; j < excel.length; j++) {
             if ((typeof excel[j][index]) != "string") {
                 window.alert(`文件：${fileArr[indexs]}第${j + 2}行第${index + 1}列数据格式不匹配！请修改后再转换`)
-                isreturn = true
+                isreturn = true;
+                return ;
             }
         }
     }
+    return true;
 }
 
 console.log("这里注册一下btnnn-changeMuch");
