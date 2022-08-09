@@ -78,14 +78,17 @@ function GetUIFiles(parentPath) {
 
 
 var NameMap = new Map();
-NameMap.set("MWImage", "MWUIImage");
-NameMap.set("MWCanvas", "MWUICanvas");
-NameMap.set("MWButton", "MWUIButton");
-NameMap.set("MWInputBox", "MWUIInputbox");
-NameMap.set("MWPanelWidget", "MWUIPanelWidget");
-NameMap.set("MWProgressBar", "MWUIProgressbar");
-NameMap.set("MWTextBlock", "MWUITextblock");
-NameMap.set("MWScrollBox", "MWUIScrollBox");
+NameMap.set("MWImage", "MWGameUI.MWUIImage");
+NameMap.set("MWCanvas", "MWGameUI.MWUICanvas");
+NameMap.set("MWButton", "MWGameUI.MWUIButton");
+NameMap.set("MWInputBox", "MWGameUI.MWUIInputbox");
+NameMap.set("MWPanelWidget", "MWGameUI.MWUIPanelWidget");
+NameMap.set("MWProgressBar", "MWGameUI.MWUIProgressbar");
+NameMap.set("MWTextBlock", "MWGameUI.MWUITextblock");
+NameMap.set("MWScrollBox", "MWGameUI.MWUIScrollBox");
+NameMap.set("MWColorPick", "MWDesignerUI.MWColorPick");
+NameMap.set("MWVirtualJoystickPanelDesigner", "MWGameUI.MWUIVirtualJoystickPanel");
+NameMap.set("MWTouchPadDesigner", "MWGameUI.MWUITouchPad");
 var DataPropty = /** @class */ (function () {
     function DataPropty(name, path, type, labStr, notExport) {
         this.name = name;
@@ -196,7 +199,7 @@ function WriteTSFile(uiFilePath, varMap) {
     varMap.forEach(function (element) {
         var newType = element.type;
         if (NameMap.has(element.type)) {
-            newType = "MWGameUI." + NameMap.get(element.type);
+            newType = NameMap.get(element.type);
         } else if (perfabMap.has(element.type)) {
             newType = perfabMap.get(element.type);
         }
@@ -224,6 +227,9 @@ function WriteTSFile(uiFilePath, varMap) {
             bindStr += "\t\tthis." + element.name + " = new " + newType + "();\n";
             bindStr += "\t\tthis." + element.name + "[\"prefab\"] = this.findChildByPath(MWGameUI.MWUIUserWidgetPrefab, \"" + element.path + "\");\n";
             bindStr += "\t\tthis." + element.name + ".buildSelf();\n";
+        }
+        else if (element.type == "MWColorPick") {
+            bindStr += "\t\tthis." + element.name + " = this.findChildByPath(" + newType + " as any, \"" + element.path + "\") as any;\n";
         }
         else {
             bindStr += "\t\tthis." + element.name + " = this.findChildByPath(" + newType + ", \"" + element.path + "\");\n";

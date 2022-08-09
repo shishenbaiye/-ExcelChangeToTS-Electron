@@ -1,7 +1,7 @@
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Component, OnInit } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { ConfigBean } from "src/uitls/ConfigBean";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
 
 const baseApi = "/api/v1/game";
 @Component({
@@ -11,7 +11,7 @@ const baseApi = "/api/v1/game";
 })
 export class TestComponent implements OnInit {
 
-    version: string = "0.7.3";
+    version: string = "0.7.5";
 
     projectMap = new Map<string, ConfigBean>()
     toppings = new FormControl();
@@ -23,22 +23,22 @@ export class TestComponent implements OnInit {
     labelPosition: 'newone' | 'newtwo' | 'oldone' = 'newtwo';
 
     private _headers: HttpHeaders =
-    new HttpHeaders({
-        'Content-Type': 'application/x-www-form-urlencoded'
-    });
-    constructor(private http: HttpClient){}
+        new HttpHeaders({
+            'Content-Type': 'application/x-www-form-urlencoded'
+        });
+    constructor(private http: HttpClient) { }
 
     ngOnInit(): void {
         console.error("ngOnInit");
         // 获取版本号
-        this.http.get(`http://api.abinsoft.com${baseApi}/syncvar?varname=version`,{headers:this._headers}).subscribe((data)=>{
-            let result = data as {code:number,msg:string,version:string}      
-            if(result.version){
-                console.error(`当前版本：`,this.version);
-            }else{
+        this.http.get(`http://api.abinsoft.com${baseApi}/syncvar?varname=version`, { headers: this._headers }).subscribe((data) => {
+            let result = data as { code: number, msg: string, version: string }
+            if (result.version) {
+                console.error(`当前版本：`, this.version);
+            } else {
                 console.error(`接口错误！`);
             }
-            
+
         })
         // 如果文件不存在，就创建配置文件
 
@@ -48,7 +48,7 @@ export class TestComponent implements OnInit {
 
         this.refreshConfigInfo();
 
-       
+
     }
 
     public excelToTS() {
