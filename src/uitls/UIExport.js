@@ -16,7 +16,7 @@ function startExport(path) {
 
     tsArr = [`//工具自动生成请勿修改
 import { ViewBase } from "odin";`];
-    tsArr.push("import { GameConfig } from \"./gameConfig/GameConfig\";\nexport namespace LanUtil {\n\texport function setUILanguage(ui: MWGameUI.MWUIButton | MWGameUI.MWUITextblock) {\n\t\tlet key: string = null;\n\t\tif (ui instanceof MWGameUI.MWUIButton) {\n\t\t\tkey = ui.getButtonString();\n\t\t}\n\t\telse {\n\t\t\tkey = ui.getText();\n\t\t}\n\n\t\tif (key) {\n\t\t\tlet lan = GameConfig.LangueConfig.getElement(key);\n\t\t\tif (lan) {\n\t\t\t\tif (ui instanceof MWGameUI.MWUIButton) {\n\t\t\t\t\tui.setButtonString(lan.Value)\n\t\t\t\t}\n\t\t\t\telse {\n\t\t\t\t\tui.setText(lan.Value);\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n}");
+    tsArr.push("export namespace LanUtil {\n\texport let getLan: (key: string) => { Value: string };\n\texport function setUILanguage(ui: MWGameUI.MWUIButton | MWGameUI.MWUITextblock) {\n\t\tif (!this.getLan) {\n\t\t\treturn;\n\t\t}\n\t\tlet key: string = null;\n\t\tif (ui instanceof MWGameUI.MWUIButton) {\n\t\t\tkey = ui.getButtonString();\n\t\t}\n\t\telse {\n\t\t\tkey = ui.getText();\n\t\t}\n\n\t\tif (key) {\n\t\t\tlet lan = this.getLan(key);\n\t\t\tif (lan) {\n\t\t\t\tif (ui instanceof MWGameUI.MWUIButton) {\n\t\t\t\t\tui.setButtonString(lan.Value)\n\t\t\t\t}\n\t\t\t\telse {\n\t\t\t\t\tui.setText(lan.Value);\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n}");
     //console.log("当前路径:" + path);
     //     console.log("1.必须先手动创建UITemplate.ts\n");
     //     console.log("2.只会导出名字以m开头的组件.ts\n");
