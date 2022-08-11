@@ -11,7 +11,7 @@ const baseApi = "/api/v1/game";
 })
 export class TestComponent implements OnInit {
 
-    version: string = "0.7.5";
+    version: string = "0.7.6";
 
     projectMap = new Map<string, ConfigBean>()
     toppings = new FormControl();
