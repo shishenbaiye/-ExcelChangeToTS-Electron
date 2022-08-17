@@ -1,8 +1,13 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ChangeDetectorRef } from "@angular/core";
 import { FormControl } from "@angular/forms";
+import { ProgressInfo, UpdateDownloadedEvent, UpdateInfo } from "electron-updater";
 import { ConfigBean } from "src/uitls/ConfigBean";
-
+import { ElectronService } from "../provider/electron.service";
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { DialogComponent } from "../dialog/dialog.component";
+import { UpdateDialogComponent } from "../updateDialog/updateDialog.component";
+import configs from "../../../package.json"
 const baseApi = "/api/v1/game";
 @Component({
     selector: "app-test",
@@ -11,7 +16,7 @@ const baseApi = "/api/v1/game";
 })
 export class TestComponent implements OnInit {
 
-    version: string = "0.7.6";
+    version: string = configs.version;
 
     projectMap = new Map<string, ConfigBean>()
     toppings = new FormControl();
@@ -19,14 +24,17 @@ export class TestComponent implements OnInit {
     selectProject: string = "";
     inputContent: string = '';
     configPath: string = '';
-    configContent: string = 'none';
     labelPosition: 'newone' | 'newtwo' | 'oldone' = 'newtwo';
-
+    updateMessage:string = "检查更新ing...";
+    updateProcessDialog: string = "";
+    updateButtonState:string = 'none';
+    newVersion:string = "";
     private _headers: HttpHeaders =
         new HttpHeaders({
             'Content-Type': 'application/x-www-form-urlencoded'
         });
-    constructor(private http: HttpClient) { }
+    
+    constructor(private http: HttpClient,private electron:ElectronService,public ref:ChangeDetectorRef,public dialog:MatDialog) { }
 
     ngOnInit(): void {
         console.error("ngOnInit");
@@ -47,8 +55,7 @@ export class TestComponent implements OnInit {
         createList();
 
         this.refreshConfigInfo();
-
-
+        this.updateVersion();
     }
 
     public excelToTS() {
@@ -128,6 +135,85 @@ export class TestComponent implements OnInit {
 
     opendir() {
         Opendir(this.configPath);
+    }
+
+    clickUpdate() {
+        // this.electron.send(`clickUpdate`,null);
+        let dialogRef = this.dialog.open(DialogComponent,{data:{name:`发现新版本v${this.newVersion}，是否更新？`}});
+        dialogRef.disableClose = true;
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.electron.send('updateNow',null);
+                let updateProcessDialog = this.dialog.open(UpdateDialogComponent,{width: '300px'});
+                updateProcessDialog.disableClose = true;
+                this.updateProcessDialog = updateProcessDialog.id;
+                this.reflashHtml();
+            }else{
+                this.updateMessage = `检查到有新版本请及时更新！`;
+                this.updateButtonState = "";
+                this.reflashHtml();
+            }
+        })
+    }
+
+    reflashHtml(){
+        this.ref.markForCheck();
+        this.ref.detectChanges();
+    }
+    updateVersion() {
+        this.electron.onUpdate((message,data) => {
+            switch (message) {
+                /**更新出错 */
+                case `error`: console.error((data as Error).message); window.alert(`更新出错！请检查是否开启vpn！`);break;
+                /**检查更新 */
+                case `checking-for-update`:{
+                    console.error("检查更新",data); 
+                    this.updateMessage = `检查更新ing...`; 
+                    this.reflashHtml();
+                    break;
+                }
+                /**需要更新 */
+                case `update-available`: 
+                    console.log(message); 
+                    let datas = data as UpdateInfo;
+                    console.error(`创建dialog`); 
+                    this.updateMessage = `检查到有新版本！`;
+                    this.updateButtonState = "";
+                    this.newVersion = datas.version;
+                    this.reflashHtml();
+                    break; 
+                /**不需要更新 */
+                case `update-not-available`: {
+                    console.log(message); 
+                    let datas = data as UpdateInfo; 
+                    this.updateMessage = `当前版本：${datas.version}，已是最新版本！`;
+                    this.updateButtonState = "none";
+                    this.reflashHtml();
+                    break;
+                }  
+                /**下载过程 */
+                case `download-Progress`:{
+                    console.log(message);
+                    let datas = data as ProgressInfo; 
+                    break;
+                } 
+                /**下载完毕 */
+                case `update-downloaded`: {
+                    console.log(message); 
+                    let datas = data as UpdateDownloadedEvent;
+                    let dialog = this.dialog.getDialogById(this.updateProcessDialog) as MatDialogRef<UpdateDialogComponent>;
+                    dialog.close();
+                    this.reflashHtml();
+                    this.electron.send(`quitAndInstall`,null);
+                    break;
+                }
+                /**测试 */
+                case `test`: {
+                    console.log(message,data);break;
+                }
+                default: break;
+            }
+        })
     }
 
 }

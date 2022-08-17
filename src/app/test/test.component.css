@@ -17,8 +17,6 @@ Button {
 
 .ffooter {
   width: 100%;
-  position: absolute;
-  top: 30rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -83,3 +81,13 @@ ul {
   margin-left: 0.5rem;
 }
 
+.update{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.update-Button{
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-left: 1rem;
+}

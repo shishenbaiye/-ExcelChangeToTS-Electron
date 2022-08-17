@@ -1,3 +1,11 @@
+<!--
+ * @Author: zebin.ge@appshahe.com
+ * @Date: 2022-08-10 19:06:28
+ * @LastEditors: zebin.ge@appshahe.com
+ * @LastEditTime: 2022-08-17 12:16:54
+ * @FilePath: \excelexporttots\src\app\test\test.component.html
+ * @Description: 
+-->
 <div class="index" >
     <mat-toolbar class="tool-title" color="primary" style="-webkit-app-region: drag">
         <span >Excel change to TypeScript v{{version}}</span>
@@ -24,7 +32,11 @@
             <mat-radio-button class="example-margin" color="warn"  value="oldone" >多文件（旧方法）</mat-radio-button>
         </mat-radio-group>
     </section>
-    <h3 style="margin-top:1rem"></h3>
+    <h3 style="margin-top:1rem" class="update">{{updateMessage}}
+        <button mat-mini-fab color="primary" aria-label="更新" class="update-Button" style="display:{{updateButtonState}}" (click)='clickUpdate()'>
+            <mat-icon>download</mat-icon>
+        </button>
+    </h3>
 
     <!-- <button mat-raised-button (click)='clickChoose()' > 读 取 </button> -->
 

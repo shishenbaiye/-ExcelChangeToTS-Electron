@@ -159,7 +159,7 @@ var clickCreateConfig = function () {
         // var jsonStr = "[\n\t{\n\t\t\"projectName\":\"ShaDouBus\",\n\t\t\"inputDir\":\"E:\\\\ConfigTest\\\\Input\\\\ConfigTable\",\n\t\t\"outputDir\":\"E:\\\\ConfigTest\\\\Output\\\\ts\"\n\t},\n\t{\n\t\t\"projectName\":\"ShaDouBus222\",\n\t\t\"inputDir\":\"E:\\\\ConfigTest\\\\Input\\\\ConfigTable\",\n\t\t\"outputDir\":\"E:\\\\ConfigTest\\\\Output\\\\ts\"\n\t}\n]"
         // var content = "\n这是一个示例，请修改成对应的目录,修改完后删除所有文字内容。\n\n注意！\"\\\" 一定要用双斜杠!\n\n{\n\t\"inputDir\":\"C:\\\\Users\\\\Admin\\\\Desktop\\\\ConfigTable\",\n\t\"outputDir\":\"C:\\\\Users\\\\Admin\\\\Desktop\\\\ts\"\n}"
         var content = "\n这是一个示例，请修改成对应的目录,修改完后删除所有文字内容。\n\n注意！\"\\\" 一定要用双斜杠!\n\n" + jsonStr
-        let Path = path.join(__dirname, '../../../../');
+        let Path = path.join(`C:\\Users\\Public\\`);
         if (fs.existsSync(`${Path}Config\\Config.json`)) {
             // 有配置文件了，就不创建了(是老配置文件就给改改)
             var oldContent = fs.readFileSync(`${Path}Config\\Config.json`, 'utf8');
@@ -176,7 +176,7 @@ var clickCreateConfig = function () {
         console.log("创建Config文件超过");
         return `${Path}Config`
     } catch (error) {
-        let Path = path.join(__dirname, '../../../../');
+        let Path = path.join(`C:\\Users\\Public\\`);
         console.log("创建Config文件报错：" + error);
         return `${Path}Config`
     }
@@ -196,14 +196,14 @@ var Taskbar = function () {
 }
 
 var createList = function () {
-    console.log(`开始创建列表`);
-    try {
-        let content = "[]";
-        let Path = path.join(__dirname, '../../../../');
-        fs.writeFileSync(`${Path}Config\\tableList.json`, content);
-    } catch (error) {
+    // console.log(`开始创建列表`);
+    // try {
+    //     let content = "[]";
+    //     let Path = path.join(__dirname, '../../../../');
+    //     fs.writeFileSync(`${Path}Config\\tableList.json`, content);
+    // } catch (error) {
 
-    }
+    // }
 }
 
 /**
@@ -212,7 +212,7 @@ var createList = function () {
 var ReadConfigJson = function () {
     try {
         console.log("__dirname：" + __dirname)
-        let tempPath = path.join(__dirname, '../../../../');
+        let tempPath = path.join(`C:\\Users\\Public\\`);
         console.log("父路径：" + tempPath)
         let content = fs.readFileSync(`${tempPath}Config\\Config.json`, 'utf8');
         console.log("读取到啥了：" + content)
@@ -223,7 +223,7 @@ var ReadConfigJson = function () {
     }
 }
 
-/**默认浏览器打开配置表说明链接 */
+/**打开配置文件夹 */
 var openUrl = function (url) {
     require('child_process').exec(`start "" "${url}"`);
 }
