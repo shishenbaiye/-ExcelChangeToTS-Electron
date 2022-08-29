@@ -1,8 +1,8 @@
 <!--
  * @Author: zebin.ge@appshahe.com
  * @Date: 2022-08-10 19:06:28
- * @LastEditors: zebin.ge@appshahe.com
- * @LastEditTime: 2022-08-17 12:16:54
+ * @LastEditors: zebin.ge
+ * @LastEditTime: 2022-08-29 13:56:06
  * @FilePath: \excelexporttots\src\app\test\test.component.html
  * @Description: 
 -->
@@ -54,9 +54,8 @@
         <mat-label>选择项目：</mat-label>
         <mat-form-field appearance="fill" class="fill-select">
             <mat-label>项目列表</mat-label>
-            <mat-select id="selectProject" [ngModel]="selectProject"
-                (ngModelChange)="selectProject=$event;projectSelectChange()">
-                <mat-option *ngFor="let topping of toppingList" [value]="topping">{{topping}}</mat-option>
+            <mat-select id="selectProject" [ngModel]="selectProject" (ngModelChange)="selectProject=$event;projectSelectChange()">
+                <mat-option *ngFor="let topping of toppingList" [value]="topping" >{{topping}}</mat-option>
             </mat-select>
         </mat-form-field>
         <button mat-raised-button color="accent" class="refresh-button" (click)='refreshConfigInfo()'>刷新配置</button>

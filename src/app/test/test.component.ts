@@ -17,7 +17,7 @@ const baseApi = "/api/v1/game";
 export class TestComponent implements OnInit {
 
     version: string = configs.version;
-
+    
     projectMap = new Map<string, ConfigBean>()
     toppings = new FormControl();
     toppingList: string[] = [];
@@ -25,6 +25,7 @@ export class TestComponent implements OnInit {
     inputContent: string = '';
     configPath: string = '';
     labelPosition: 'newone' | 'newtwo' | 'oldone' = 'newtwo';
+
     updateMessage:string = "检查更新ing...";
     updateProcessDialog: string = "";
     updateButtonState:string = 'none';
@@ -86,7 +87,7 @@ export class TestComponent implements OnInit {
             var outputDir2 = element["outputDir"]
             var bean = new ConfigBean(projectName, projectRootPath, inputDir2, outputDir2)
             this.projectMap.set(projectName, bean)
-
+            this.projectSelectChange()
             // 把项目列表展示在UI上
             this.toppingList.push(projectName)
             console.log("projectName:", projectName, " inputDir:", inputDir2, " outputDir:", outputDir2);

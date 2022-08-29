@@ -12,7 +12,7 @@ var btnnn = function () {
     var arrayContent = [];
     var arrayinterface = [];
     /** 读取到的文件名数组 */
-    var _fileArray = fs.readdirSync(inputDir);
+    var _fileArray =[];
     // 数据类型的表头缓存，用于判断是否更改了类型
     var cacheTableHeadTypeMap = new Map();
     // 去掉不合适的之后的文件名数组
@@ -38,6 +38,14 @@ var btnnn = function () {
 
     var dirExists = false
 
+    try{
+        _fileArray = fs.readdirSync(inputDir)
+        let out = fs.readdirSync(outputDir)
+    }catch{
+        window.alert("请检查路径是否正确!!!")
+        isreturn = true
+    }
+    
     initCache(cacheTableHeadTypeMap)
 
     console.log("看看多少个文件：" + _fileArray.length)
@@ -399,7 +407,7 @@ var btnnn = function () {
                     if (!excel[i][j] && excel[i][j] != 0) {
                         excel[i][j] = null
                     } else {
-                        excel[i][j] = excel[i][j].split("\||");
+                        excel[i][j] = excel[i][j].toString().split("\||");
                         excel[i][j].forEach((item, index) => {
                             excel[i][j][index] = item.split("\|");
                             excel[i][j][index].forEach((items, indexs) => {
@@ -472,9 +480,9 @@ var btnnn = function () {
                     if (!excel[i][j]) {
                         excel[i][j] = null
                     } else {
-                        excel[i][j] = excel[i][j].split("\|\|");
+                        excel[i][j] = excel[i][j].toString().split("\|\|");
                         excel[i][j].forEach((item, index) => {
-                            excel[i][j][index] = item.split("\|");
+                            excel[i][j][index] = item.toString().split("\|");
                             excel[i][j][index].forEach((items, indexs) => {
                                 excel[i][j][index][indexs] = Number(items)
                             })
@@ -487,7 +495,7 @@ var btnnn = function () {
                     if (!excel[i][j]) {
                         excel[i][j] = null
                     } else {
-                        excel[i][j] = excel[i][j].replace(/\|\|/g, ",");
+                        excel[i][j] = excel[i][j].toString().replace(/\|\|/g, ",");
                         excel[i][j] = excel[i][j].split(",");
                         excel[i][j].forEach((item, index) => {
                             excel[i][j][index] = item.replace(/\|/g, ",").split(",");
@@ -803,7 +811,7 @@ var creatGameConfig = function (allfilename) {
         "\n\t\tConfigBase.initLanguage(languageIndex, getLanguageFun);" +
         "\n\t\tthis.configMap.clear();" +
         "\n\t}" +
-        "\n\tprivate static getConfig<T extends ConfigBase<IElementBase>>(ConfigClass: { new(): T }): T {" +
+        "\n\tpublic static getConfig<T extends ConfigBase<IElementBase>>(ConfigClass: { new(): T }): T {" +
         "\n\t\tif (!this.configMap.has(ConfigClass.name)) {" +
         "\n\t\t\tthis.configMap.set(ConfigClass.name, new ConfigClass());" +
         "\n\t\t}" +
