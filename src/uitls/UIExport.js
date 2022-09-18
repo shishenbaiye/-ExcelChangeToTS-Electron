@@ -25,7 +25,7 @@ import { ViewBase } from "odin";`];
         fileList.forEach(function (element) {
             ParseUIFile(element, strList);
         });
-        var savePath = path + "\\JavaScripts\\" + "UITemplate.ts";
+        var savePath = path + "\\JavaScripts\\ui\\" + "UITemplate.ts";
         fs.writeFile(savePath, tsArr.join("\n"), { encoding: "utf-8" }, function () {
             console.log("保存成功：" + savePath);
         });
