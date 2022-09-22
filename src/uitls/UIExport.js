@@ -86,7 +86,7 @@ NameMap.set("MWPanelWidget", "MWGameUI.MWUIPanelWidget");
 NameMap.set("MWProgressBar", "MWGameUI.MWUIProgressbar");
 NameMap.set("MWTextBlock", "MWGameUI.MWUITextblock");
 NameMap.set("MWScrollBox", "MWGameUI.MWUIScrollBox");
-NameMap.set("MWColorPick", "MWDesignerUI.MWColorPick");
+NameMap.set("MWColorPick", "MWGameUI.MWColorPick");
 NameMap.set("MWVirtualJoystickPanelDesigner", "MWGameUI.MWUIVirtualJoystickPanel");
 NameMap.set("MWTouchPadDesigner", "MWGameUI.MWUITouchPad");
 var DataPropty = /** @class */ (function () {
