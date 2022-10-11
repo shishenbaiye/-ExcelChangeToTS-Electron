@@ -89,6 +89,7 @@ NameMap.set("MWScrollBox", "MWGameUI.MWUIScrollBox");
 NameMap.set("MWColorPick", "MWGameUI.MWColorPick");
 NameMap.set("MWVirtualJoystickPanelDesigner", "MWGameUI.MWUIVirtualJoystickPanel");
 NameMap.set("MWTouchPadDesigner", "MWGameUI.MWUITouchPad");
+NameMap.set("MWGameButton", "MWGameUI.MWUIGameButton");
 var DataPropty = /** @class */ (function () {
     function DataPropty(name, path, type, labStr, notExport) {
         this.name = name;
@@ -212,11 +213,14 @@ function WriteTSFile(uiFilePath, varMap) {
         }
         propertyStr += "\tpublic " + element.name + ": " + newType + ";\n";
 
-        if (element.type == "MWButton") {
+        if (element.type == "MWButton" || element.type == "MWGameButton") {
             bindStr += "\t\tthis." + element.name + " = this.findChildByPath(" + newType + ", \"" + element.path + "\");\n";
 
             focusStr += "\t\tthis." + element.name + ".onClicked().add(() => {\n\t\t\tEvents.dispatchLocal(\"PlayButtonClick\", \"" + element.name + "\");\n\t\t});\n";
-            focusStr += `\t\tLanUtil.setUILanguage(this.${element.name});\n`
+            if (element.type == "MWButton") {
+                focusStr += `\t\tLanUtil.setUILanguage(this.${element.name});\n`
+            }
+
         }
         else if (element.type == "MWTextBlock") {
 
@@ -279,3 +283,4 @@ function GetFileNameByPath(path) {
     }
     return "";
 }
+//npm run dist
