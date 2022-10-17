@@ -499,9 +499,8 @@ var btnnn = function () {
                                 excel[i][j][index] = tagNum + "$" + excel[i][j][index] + "$" + tagNum;
                             }
                         } else {
-                            let arr = [];
-                            arr.push(excel[i][j].toString());
-                            excel[i][j] = arr;
+                            window.alert(`文件${fileArray[indexe]}中第${i + 1}行${j + 1}类型填写错误!`);
+                            checkreturn = true
                         }
                     }
                 }
