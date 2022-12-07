@@ -58,6 +58,10 @@ app.on('ready', () => {
     // 检查更新
     setTimeout(() => {
         checkForUpdates();
+        // 30分钟检查一次更新
+        setInterval(() => {
+            checkForUpdates();
+        }, 1000 * 60 * 30);
     },5000);
 });
 
