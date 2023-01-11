@@ -2,7 +2,7 @@
  * @Author: zebin.ge@appshahe.com
  * @Date: 2022-08-10 19:06:28
  * @LastEditors: zebin.ge
- * @LastEditTime: 2022-08-29 13:56:06
+ * @LastEditTime: 2023-01-11 13:36:20
  * @FilePath: \excelexporttots\src\app\test\test.component.html
  * @Description: 
 -->
@@ -23,15 +23,15 @@
     
     <p style="font-size:18px ;">Author：zebin.ge</p>
     <h3>请在Config文件夹下修改配置文件Config.json</h3>
-    <section class="example-section" >
-        <!-- <mat-checkbox class="example-margin" color="warn" [checked]="checkOne" (change)="selection($event.source.id,$event.checked)" id="one">生成单文件(旧)</mat-checkbox>
-        <mat-checkbox class="example-margin" color="warn" [checked]="checkTwo" (change)="selection($event.source.id,$event.checked)" id="two">生成多文件</mat-checkbox> -->
+    <!-- <section class="example-section" >
+        <mat-checkbox class="example-margin" color="warn" [checked]="checkOne" (change)="selection($event.source.id,$event.checked)" id="one">生成单文件(旧)</mat-checkbox>
+        <mat-checkbox class="example-margin" color="warn" [checked]="checkTwo" (change)="selection($event.source.id,$event.checked)" id="two">生成多文件</mat-checkbox>
         <mat-radio-group [(ngModel)]="labelPosition">
             <mat-radio-button class="example-margin" color="warn"  value="newone" >单文件(过时)</mat-radio-button>
             <mat-radio-button class="example-margin" color="warn"  value="newtwo" >多文件(推荐)</mat-radio-button>
             <mat-radio-button class="example-margin" color="warn"  value="oldone" >多文件（旧方法）</mat-radio-button>
         </mat-radio-group>
-    </section>
+    </section> -->
     <h3 style="margin-top:1rem" class="update">{{updateMessage}}
         <button mat-mini-fab color="primary" aria-label="更新" class="update-Button" style="display:{{updateButtonState}}" (click)='clickUpdate()'>
             <mat-icon>download</mat-icon>
@@ -46,7 +46,6 @@
     <button mat-stroked-button style="margin-bottom: 1rem;" (click)='opendir()'>打开配置文件夹</button>
     <div class="choose-div">
         <button mat-raised-button color="primary" (click)='clickbtn()'>配置表转换</button>
-        <button mat-raised-button color="primary" class="refresh-button" (click)='excelToTS()'>UI文件转换</button>
     </div>
     <!-- <button mat-raised-button color="primary" (click)='clickbtn()' matTooltip="转换前请配置路径~" aria-label="">转换</button> -->
     <br/>

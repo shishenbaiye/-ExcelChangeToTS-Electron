@@ -130,7 +130,7 @@ var btnnn = function () {
         isreturn = false;
         return
     }
-
+    console.warn(excelArray)
     /**校验列表文件 */
     allListArray = _selectFileNameArray; // ChecktableList(_selectFileNameArray);
 
@@ -760,7 +760,7 @@ var creatConfigBase = function () {
         "\n\t}" +
         "\n\t//获取系统语言索引" +
         "\n\tprivate static getSystemLanguageIndex():number{" +
-        "\n\t\tlet language = Global.getDefaultLocale().toString().toLowerCase();" +
+        "\n\t\tlet language = Util.LocaleUtil.getDefaultLocale().toString().toLowerCase();" +
         "\n\t\tif (!!language.match(\"en\")) {" +
         "\n\t\t\treturn 0;" +
         "\n\t\t}" +

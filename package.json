@@ -1,11 +1,12 @@
 {
   "name": "ExcelToTypeScript",
-  "version": "0.8.9",
+  "version": "0.9.0",
   "main": "main.js",
   "author": "zebin.ge",
   "contributors": [
     "long.shi",
-    "fanglian.yang"
+    "fanglian.yang",
+    "zhenyu.zhang"
   ],
   "description": "a tool for excel change to typescript",
   "scripts": {
