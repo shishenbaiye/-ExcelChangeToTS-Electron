@@ -130,10 +130,9 @@ var btnnn = function () {
         isreturn = false;
         return
     }
-    console.warn(excelArray)
+    console.warn(excelArray);
     /**校验列表文件 */
     allListArray = _selectFileNameArray; // ChecktableList(_selectFileNameArray);
-
     console.log("开始清楚空行");
     /**清除空行 */
     excelArray.forEach((obj, index) => {
@@ -337,7 +336,7 @@ var btnnn = function () {
 
             if (excel[0][j] == "VECTOR2") {
                 for (let i = Sindex; i < excel.length; i++) {
-                    if (!excel[i][j]) {
+                    if (!excel[i][j]||excel[i][j] === "") {
                         excel[i][j] = null
                     } else {
                         excel[i][j] = excel[i][j].replace(/\|/g, ",");
@@ -347,7 +346,7 @@ var btnnn = function () {
             }
             if (excel[0][j] == "VECTOR3") {
                 for (let i = Sindex; i < excel.length; i++) {
-                    if (!excel[i][j]) {
+                    if (!excel[i][j]||excel[i][j] === "") {
                         excel[i][j] = null
                     } else {
                         excel[i][j] = excel[i][j].replace(/\|/g, ",");
@@ -357,7 +356,7 @@ var btnnn = function () {
             }
             if (excel[0][j] == "VECTOR4") {
                 for (let i = Sindex; i < excel.length; i++) {
-                    if (!excel[i][j]) {
+                    if (!excel[i][j]||excel[i][j] === "") {
                         excel[i][j] = null
                     } else {
                         excel[i][j] = excel[i][j].replace(/\|/g, ",");
@@ -367,8 +366,8 @@ var btnnn = function () {
             }
             if (excel[0][j] == "BOOLEAN") {
                 for (let i = Sindex; i < excel.length; i++) {
-                    if (!excel[i][j] && excel[i][j] != 0) {
-                        excel[i][j] = 0
+                    if (!excel[i][j] && excel[i][j] != 0 || excel[i][j] === "") {
+                        excel[i][j] = null;
                     } else {
                         if (excel[i][j] == 1) {
                             excel[i][j] = true;
@@ -383,7 +382,7 @@ var btnnn = function () {
             }
             if (excel[0][j] == "BOOLEAN[]") {
                 for (let i = Sindex; i < excel.length; i++) {
-                    if (!excel[i][j] && excel[i][j] != 0) {
+                    if (!excel[i][j] && excel[i][j] != 0||excel[i][j] === "") {
                         excel[i][j] = null
                     } else {
                         if (!!excel[i][j].toString().match(/\|/g)) {
@@ -415,7 +414,7 @@ var btnnn = function () {
             }
             if (excel[0][j] == "BOOLEAN[][]") {
                 for (let i = Sindex; i < excel.length; i++) {
-                    if (!excel[i][j] && excel[i][j] != 0) {
+                    if (!excel[i][j] && excel[i][j] != 0||excel[i][j] === "") {
                         excel[i][j] = null
                     } else {
                         excel[i][j] = excel[i][j].toString().split("\||");
@@ -437,7 +436,7 @@ var btnnn = function () {
             }
             if (excel[0][j] == "STRING") {
                 for (let i = Sindex; i < excel.length; i++) {
-                    if (!excel[i][j] && excel[i][j] != 0) {
+                    if (!excel[i][j] && excel[i][j] != 0||excel[i][j] === "") {
                         excel[i][j] = null
                     } else {
                         excel[i][j] = excel[i][j].toString();
@@ -446,14 +445,14 @@ var btnnn = function () {
             }
             if (excel[0][j] == "INT" || excel[0][j] == "FLOAT") {
                 for (let i = Sindex; i < excel.length; i++) {
-                    if (!excel[i][j] && excel[i][j] != 0) {
+                    if (!excel[i][j] && excel[i][j] != 0 ||excel[i][j] === "") {
                         excel[i][j] = 0
                     }
                 }
             }
             if (excel[0][j] == "INT[]" || excel[0][j] == "FLOAT[]") {
                 for (let i = Sindex; i < excel.length; i++) {
-                    if (!excel[i][j] && excel[i][j] != 0) {
+                    if (!excel[i][j] && excel[i][j] != 0||excel[i][j] === "") {
                         excel[i][j] = null
                     } else {
                         if (!!excel[i][j].toString().match(/\|/g)) {
@@ -471,7 +470,7 @@ var btnnn = function () {
             }
             if (excel[0][j] == "STRING[]") {
                 for (let i = Sindex; i < excel.length; i++) {
-                    if (!excel[i][j]) {
+                    if (!excel[i][j]||excel[i][j] === "") {
                         excel[i][j] = null
                     } else {
                         if (!!excel[i][j].toString().match(/\|/g)) {
@@ -488,7 +487,7 @@ var btnnn = function () {
             }
             if (excel[0][j] == "VECTOR2[]" || excel[0][j] == "VECTOR3[]" || excel[0][j] == "VECTOR4[]") {
                 for (let i = Sindex; i < excel.length; i++) {
-                    if (!excel[i][j]) {
+                    if (!excel[i][j]||excel[i][j] === "") {
                         excel[i][j] = null
                     } else {
                         const tagNum = (excel[0][j])[6];
@@ -507,7 +506,7 @@ var btnnn = function () {
             }
             if (excel[0][j] == "INT[][]" || excel[0][j] == "FLOAT[][]") {
                 for (let i = Sindex; i < excel.length; i++) {
-                    if (!excel[i][j]) {
+                    if (!excel[i][j]||excel[i][j] === "") {
                         excel[i][j] = null
                     } else {
                         excel[i][j] = excel[i][j].toString().split("\|\|");
@@ -522,7 +521,7 @@ var btnnn = function () {
             }
             if (excel[0][j] == "STRING[][]") {
                 for (let i = Sindex; i < excel.length; i++) {
-                    if (!excel[i][j]) {
+                    if (!excel[i][j]||excel[i][j] === "") {
                         excel[i][j] = null
                     } else {
                         excel[i][j] = excel[i][j].toString().replace(/\|\|/g, ",");
@@ -947,8 +946,9 @@ var checklist = function (excelArray) {
             switch (excel[0][i]) {
                 case "INT": check("int", i, excel, index);
                     break;
-                case "STRING": check("string", i, excel, index)
+                case "STRING": check("string", i, excel, index);
                     break;
+                case "FLOAT": check("float", i, excel, index);
             }
         }
         let map = new Map();
@@ -991,14 +991,14 @@ var check = function (method, index, excel, indexs) {
                 if (excel[j][index] % 1 != 0 && excel[j][index] != null) {
                     console.log(typeof excel[j][index]);
                     console.log(indexs, j, index);
-                    window.alert(`文件：${fileArr[indexs]}第${j + 2}行第${index + 1}列数据格式不匹配！请修改后再转换`);
+                    window.alert(`文件：${fileArr[indexs]}第${j + 1}行第${index + 1}列数据格式不匹配！请修改后再转换`);
                     isreturn = true;
                     return;
                 }
             } else {
                 console.log(indexs, j, index);
                 console.log(typeof excel[j][index]);
-                window.alert(`文件：${fileArr[indexs]}第${j + 2}行第${index + 1}列数据格式不匹配！请修改后再转换`)
+                window.alert(`文件：${fileArr[indexs]}第${j + 1}行第${index + 1}列数据格式不匹配！请修改后再转换`)
                 isreturn = true;
                 return;
             }
@@ -1007,7 +1007,16 @@ var check = function (method, index, excel, indexs) {
     if (method == "string") {
         for (j = 4; j < excel.length; j++) {
             if ((typeof excel[j][index]) != "string" && excel[j][index] != null) {
-                window.alert(`文件：${fileArr[indexs]}第${j + 2}行第${index + 1}列数据格式不匹配！请修改后再转换`)
+                window.alert(`文件：${fileArr[indexs]}第${j + 1}行第${index + 1}列数据格式不匹配！请修改后再转换`)
+                isreturn = true;
+                return;
+            }
+        }
+    }
+    if(method == "float"){
+        for (j = 4; j < excel.length; j++) {
+            if ((typeof excel[j][index]) != "number" && excel[j][index] != null) {
+                window.alert(`文件：${fileArr[indexs]}第${j + 1}行第${index + 1}列数据格式不匹配！请修改后再转换`)
                 isreturn = true;
                 return;
             }
