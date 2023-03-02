@@ -474,9 +474,9 @@ var btnnn = function () {
                         excel[i][j] = null
                     } else {
                         if (!!excel[i][j].toString().match(/\|/g)) {
-                            excel[i][j] = excel[i][j].replace(/\|/g, ",");
+                            // excel[i][j] = excel[i][j].replace(/\|/g, ",");
                             excel[i][j] = "" + excel[i][j] + "";
-                            excel[i][j] = excel[i][j].split(",")
+                            excel[i][j] = excel[i][j].split("\|");
                         } else {
                             let arr = [];
                             arr.push(excel[i][j].toString());
@@ -524,10 +524,11 @@ var btnnn = function () {
                     if (!excel[i][j]||excel[i][j] === "") {
                         excel[i][j] = null
                     } else {
-                        excel[i][j] = excel[i][j].toString().replace(/\|\|/g, ",");
-                        excel[i][j] = excel[i][j].split(",");
+                        // excel[i][j] = excel[i][j].toString().replace(/\|\|/g, ",");
+                        excel[i][j] = excel[i][j].split("\|\|");
                         excel[i][j].forEach((item, index) => {
-                            excel[i][j][index] = item.replace(/\|/g, ",").split(",");
+                            // excel[i][j][index] = item.replace(/\|/g, ",").split(",");
+                            excel[i][j][index] = item.split("\|");
                         })
                     }
                 }
