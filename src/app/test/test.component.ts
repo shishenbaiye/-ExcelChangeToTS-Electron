@@ -165,7 +165,7 @@ export class TestComponent implements OnInit {
         this.electron.onUpdate((message,data) => {
             switch (message) {
                 /**更新出错 */
-                case `error`: console.error((data as Error).message); window.alert(`更新出错！请检查是否开启vpn！`);break;
+                case `error`: console.error((data as Error).message); this.updateMessage = `更新出错！`;this.reflashHtml();;break;
                 /**检查更新 */
                 case `checking-for-update`:{
                     console.error("检查更新",data); 

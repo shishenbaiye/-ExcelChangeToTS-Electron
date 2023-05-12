@@ -206,7 +206,8 @@ var btnnn = function () {
                         obj[0][i] = `STRING`
                     }
                     if (obj[3][i] != `ChildLanguage`) {
-                        object += `"${obj[1][i]}"`
+                        obj[1][i] = obj[1][i].trim();
+                        object += `"${obj[1][i]}"`;
                         describe += `${obj[2][i]}`
                     }
                 }
@@ -267,6 +268,7 @@ var btnnn = function () {
                         obj[0][i] = `STRING`
                     }
                     if (obj[3][i] != `ChildLanguage`) {
+                        obj[1][i] = obj[1][i].trim();
                         object += `"${obj[1][i]}",`
                         describe += `${obj[2][i]},`
                     }
@@ -317,11 +319,12 @@ var btnnn = function () {
                 }
             }
         }
+        
         objectArray.push(object);
         methodArray.push(method);
         describeArray.push(describe);
     })
-    console.warn(`objectArray`);
+
     if (checkreturn) {
         checkreturn = false;
         return
@@ -784,7 +787,7 @@ var creatConfigBase = function () {
         "\n\tpublic getElement(id:number|string): T {" +
         "\n\t\tlet ele = this.ELEMENTMAP.get(Number(id)) || this.ELEMENTMAP.get(this.KEYMAP.get(id));" +
         "\n\t\tif(ele == null){" +
-        "\n\t\t\tconsole.error(this.constructor.name + \"配置表中找不到元素 id:\" + id);" +
+        "\n\t\t\tconsole.warn(this.constructor.name + \"配置表中找不到元素 id:\" + id);" +
         "\n\t\t}" +
         "\n\t\treturn ele;" +
         "\n\t}" +
