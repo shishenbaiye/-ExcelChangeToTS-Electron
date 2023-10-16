@@ -101,6 +101,9 @@
   },
   "build": {
     "appId": "com.electron.ExcelToTypeScript",
+    "files": [
+      "!.angular/**/*"
+    ],
     "win": {
       "target": [
         "nsis"
@@ -113,9 +116,9 @@
       ]
     },
     "directories": {
-      "output": "build"
+      "output": "buildCamp"
     },
-    "asar":true,
+    "asar":false,
     "nsis": {
       "oneClick": false,
       "allowElevation": true,

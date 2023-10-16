@@ -117,10 +117,9 @@ var btnnn = function () {
         let endParseTime = new Date().getTime()
         console.log("文件遍历解析结束：" + item + "  " + endParseTime)
         if (endParseTime - startParseTime > 3000) {
-            console.log("解析超时(超过3秒)：" + item + "  耗时：" + (endParseTime - startParseTime))
+            console.warn("解析超时(超过3秒)：" + item + "  耗时：" + (endParseTime - startParseTime))
         }
     })
-
     // 清理掉用来临时判断重复的map
     _tempMulitMap.clear()
     _tempMulitMap = null
@@ -185,140 +184,147 @@ var btnnn = function () {
     }
 
     console.log("开始解析属性类型");
-    console.warn(excelArray);
+    
     //属性类型描述数组
     excelArray.forEach((obj, index) => {
         let object = "";
         let method = "";
         let describe = "";
         console.warn(obj);
-        for (let i = 0; i < obj[0].length; i++) {
-            if (i == obj[0].length - 1) {
-                try {
-                    obj[0][i] = obj[0][i].toUpperCase()
-                } catch (error) {
-                    window.alert(`文件：${fileArray[index]}第1行第${i + 1}列变量类型有误，请检查后再转换！`)
-                    checkreturn = true
-                    return;
-                }
-                if (obj.length > 3) {
-                    if (obj[3][i] == `Language`) {
-                        obj[0][i] = `STRING`
+        try {
+            for (let i = 0; i < obj[0].length; i++) {
+                if (i == obj[0].length - 1) {
+                    try {
+                        obj[0][i] = obj[0][i].toUpperCase()
+                    } catch (error) {
+                        window.alert(`文件：${fileArray[index]}第1行第${i + 1}列变量类型有误，请检查后再转换！`)
+                        checkreturn = true
+                        return;
+                    }
+                    if (obj.length > 3) {
+                        if (obj[3][i] == `Language`) {
+                            obj[0][i] = `STRING`
+                        }
+                        if (obj[3][i] != `ChildLanguage`) {
+                            obj[1][i] = obj[1][i].trim();
+                            object += `"${obj[1][i]}"`;
+                            describe += `${obj[2][i]}`
+                        }
                     }
                     if (obj[3][i] != `ChildLanguage`) {
-                        obj[1][i] = obj[1][i].trim();
-                        object += `"${obj[1][i]}"`;
-                        describe += `${obj[2][i]}`
+                        switch (obj[0][i]) {
+                            case "INT": method += `number`
+                                break;
+                            case "STRING": method += `string`
+                                break;
+                            case "VECTOR2": method += `mw.Vector2`
+                                break;
+                            case "VECTOR3": method += `mw.Vector`
+                                break;
+                            case "VECTOR4": method += `mw.Vector4`
+                                break;
+                            case "INT[]": method += `Array<number>`
+                                break;
+                            case "STRING[]": method += 'Array<string>'
+                                break;
+                            case "INT[][]": method += `Array<Array<number>>`
+                                break;
+                            case "STRING[][]": method += `Array<Array<string>>`
+                                break;
+                            case "FLOAT": method += `number`
+                                break;
+                            case "FLOAT[]": method += `Array<number>`
+                                break;
+                            case "FLOAT[][]": method += `Array<Array<number>>`
+                                break;
+                            case "BOOLEAN": method += `boolean`
+                                break;
+                            case "BOOLEAN[]": method += `Array<boolean>`
+                                break;
+                            case "BOOLEAN[][]": method += `Array<Array<boolean>>`
+                                break;
+                            case "VECTOR2[]": method += `mw.Vector2[],`
+                                break;
+                            case "VECTOR3[]": method += `mw.Vector[],`
+                                break;
+                            case "VECTOR4[]": method += `mw.Vector4[],`
+                                break;
+                            default:
+                                window.alert(`文件：${fileArray[index]}第1行第${i + 1}列变量类型填写有误，请检查后再转换！`)
+                                checkreturn = true
+                                return;
+                        }
                     }
-                }
-                if (obj[3][i] != `ChildLanguage`) {
-                    switch (obj[0][i]) {
-                        case "INT": method += `number`
-                            break;
-                        case "STRING": method += `string`
-                            break;
-                        case "VECTOR2": method += `Type.Vector2`
-                            break;
-                        case "VECTOR3": method += `Type.Vector`
-                            break;
-                        case "VECTOR4": method += `Type.Vector4`
-                            break;
-                        case "INT[]": method += `Array<number>`
-                            break;
-                        case "STRING[]": method += 'Array<string>'
-                            break;
-                        case "INT[][]": method += `Array<Array<number>>`
-                            break;
-                        case "STRING[][]": method += `Array<Array<string>>`
-                            break;
-                        case "FLOAT": method += `number`
-                            break;
-                        case "FLOAT[]": method += `Array<number>`
-                            break;
-                        case "FLOAT[][]": method += `Array<Array<number>>`
-                            break;
-                        case "BOOLEAN": method += `boolean`
-                            break;
-                        case "BOOLEAN[]": method += `Array<boolean>`
-                            break;
-                        case "BOOLEAN[][]": method += `Array<Array<boolean>>`
-                            break;
-                        case "VECTOR2[]": method += `Type.Vector2[],`
-                            break;
-                        case "VECTOR3[]": method += `Type.Vector[],`
-                            break;
-                        case "VECTOR4[]": method += `Type.Vector4[],`
-                            break;
-                        default:
-                            window.alert(`文件：${fileArray[index]}第1行第${i + 1}列变量类型填写有误，请检查后再转换！`)
-                            checkreturn = true
-                            return;
+                } else {
+                    try {
+                        obj[0][i] = obj[0][i].toUpperCase();
+                    } catch (error) {
+                        window.alert(`文件：${fileArray[index]}第1行第${i + 1}列变量类型有误，请检查后再转换！`)
+                        checkreturn = true
+                        return
                     }
-                }
-            } else {
-                try {
-                    obj[0][i] = obj[0][i].toUpperCase();
-                } catch (error) {
-                    window.alert(`文件：${fileArray[index]}第1行第${i + 1}列变量类型有误，请检查后再转换！`)
-                    checkreturn = true
-                    return
-                }
-                if (obj.length > 3) {
-                    if (obj[3][i] == `Language`) {
-                        obj[0][i] = `STRING`
+                    if (obj.length > 3) {
+                        if (obj[3][i] == `Language`) {
+                            obj[0][i] = `STRING`
+                        }
+                        if (obj[3][i] != `ChildLanguage`) {
+                            obj[1][i] = obj[1][i].trim();
+                            object += `"${obj[1][i]}",`
+                            describe += `${obj[2][i]},`
+                        }
                     }
                     if (obj[3][i] != `ChildLanguage`) {
-                        obj[1][i] = obj[1][i].trim();
-                        object += `"${obj[1][i]}",`
-                        describe += `${obj[2][i]},`
-                    }
-                }
-                if (obj[3][i] != `ChildLanguage`) {
-                    switch (obj[0][i]) {
-                        case "INT": method += `number,`
-                            break;
-                        case "STRING": method += `string,`
-                            break;
-                        case "VECTOR2": method += `Type.Vector2,`
-                            break;
-                        case "VECTOR3": method += `Type.Vector,`
-                            break;
-                        case "VECTOR4": method += `Type.Vector4,`
-                            break;
-                        case "INT[]": method += `Array<number>,`
-                            break;
-                        case "STRING[]": method += 'Array<string>,'
-                            break;
-                        case "INT[][]": method += `Array<Array<number>>,`
-                            break;
-                        case "STRING[][]": method += `Array<Array<string>>,`
-                            break;
-                        case "FLOAT": method += `number,`
-                            break;
-                        case "FLOAT[]": method += `Array<number>,`
-                            break;
-                        case "FLOAT[][]": method += `Array<Array<number>>,`
-                            break;
-                        case "BOOLEAN": method += `boolean,`
-                            break;
-                        case "BOOLEAN[]": method += `Array<boolean>,`
-                            break;
-                        case "BOOLEAN[][]": method += `Array<Array<boolean>>,`
-                            break;
-                        case "VECTOR2[]": method += `Type.Vector2[],`
-                            break;
-                        case "VECTOR3[]": method += `Type.Vector[],`
-                            break;
-                        case "VECTOR4[]": method += `Type.Vector4[],`
-                            break;
-                        default:
-                            window.alert(`文件：${fileArray[index]}第1行第${i + 1}列变量类型填写有误，请检查后再转换！`);
-                            checkreturn = true
-                            return
+                        switch (obj[0][i]) {
+                            case "INT": method += `number,`
+                                break;
+                            case "STRING": method += `string,`
+                                break;
+                            case "VECTOR2": method += `mw.Vector2,`
+                                break;
+                            case "VECTOR3": method += `mw.Vector,`
+                                break;
+                            case "VECTOR4": method += `mw.Vector4,`
+                                break;
+                            case "INT[]": method += `Array<number>,`
+                                break;
+                            case "STRING[]": method += 'Array<string>,'
+                                break;
+                            case "INT[][]": method += `Array<Array<number>>,`
+                                break;
+                            case "STRING[][]": method += `Array<Array<string>>,`
+                                break;
+                            case "FLOAT": method += `number,`
+                                break;
+                            case "FLOAT[]": method += `Array<number>,`
+                                break;
+                            case "FLOAT[][]": method += `Array<Array<number>>,`
+                                break;
+                            case "BOOLEAN": method += `boolean,`
+                                break;
+                            case "BOOLEAN[]": method += `Array<boolean>,`
+                                break;
+                            case "BOOLEAN[][]": method += `Array<Array<boolean>>,`
+                                break;
+                            case "VECTOR2[]": method += `mw.Vector2[],`
+                                break;
+                            case "VECTOR3[]": method += `mw.Vector[],`
+                                break;
+                            case "VECTOR4[]": method += `mw.Vector4[],`
+                                break;
+                            default:
+                                window.alert(`文件：${fileArray[index]}第1行第${i + 1}列变量类型填写有误，请检查后再转换！`);
+                                checkreturn = true
+                                return
+                        }
                     }
                 }
             }
+        }catch(error){
+            window.alert(`文件：${fileArray[index]}表数据有误，请检查后再转换！`)
+            checkreturn = true
+            return
         }
+        
         
         objectArray.push(object);
         methodArray.push(method);
@@ -335,6 +341,7 @@ var btnnn = function () {
 
     /**修改原数组 */
     excelArray.forEach((excel, indexe) => {
+        console.log(`开始赋值操作！${fileArray[indexe]}`)
         for (let j = 0; j < excel[0].length; j++) {
 
             if (excel[0][j] == "VECTOR2") {
@@ -763,7 +770,7 @@ var creatConfigBase = function () {
         "\n\t}" +
         "\n\t//获取系统语言索引" +
         "\n\tprivate static getSystemLanguageIndex():number{" +
-        "\n\t\tlet language = Util.LocaleUtil.getDefaultLocale().toString().toLowerCase();" +
+        "\n\t\tlet language = LocaleUtil.getDefaultLocale().toString().toLowerCase();" +
         "\n\t\tif (!!language.match(\"en\")) {" +
         "\n\t\t\treturn 0;" +
         "\n\t\t}" +
@@ -869,9 +876,9 @@ var creatTableFile = function (filsArray, arrayData, interfaceData, arrayLanguag
         let req2h = /\$2"/g
         let req3h = /\$3"/g
         let req4h = /\$4"/g
-        str = str.replace(req2q, "new Type.Vector2(");
-        str = str.replace(req3q, "new Type.Vector(");
-        str = str.replace(req4q, "new Type.Vector4(");
+        str = str.replace(req2q, "new mw.Vector2(");
+        str = str.replace(req3q, "new mw.Vector(");
+        str = str.replace(req4q, "new mw.Vector4(");
         str = str.replace(req2h, ")");
         str = str.replace(req3h, ")");
         str = str.replace(req4h, ")");
