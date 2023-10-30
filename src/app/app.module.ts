@@ -20,11 +20,13 @@ import { MatSelectModule } from '@angular/material/select';
 import { ElectronService } from "./provider/electron.service"
 import { DialogComponent } from './dialog/dialog.component';
 import { UpdateDialogComponent } from './updateDialog/updateDialog.component';
+import { CommonLoadingComponent } from './commonLoading/commonLoading.component';
 @NgModule({
   declarations: [
     TestComponent,
     DialogComponent,
-    UpdateDialogComponent
+    UpdateDialogComponent,
+    CommonLoadingComponent
   ],
   imports: [
     BrowserModule,

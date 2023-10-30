@@ -37,7 +37,8 @@
               "src/uitls/UIExport.js",
               "src/uitls/changeScript.js",
               "src/uitls/changeAll.js",
-              "src/uitls/changeMuch.js"
+              "src/uitls/changeMuch.js",
+              "src/uitls/changeMuch026.js"
             ]
           },
           "configurations": {

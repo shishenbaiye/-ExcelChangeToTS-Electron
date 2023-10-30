@@ -8,6 +8,8 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DialogComponent } from "../dialog/dialog.component";
 import { UpdateDialogComponent } from "../updateDialog/updateDialog.component";
 import configs from "../../../package.json"
+import { CommonLoadingComponent } from "../commonLoading/commonLoading.component";
+import { resolve } from "path";
 const baseApi = "/api/v1/game";
 @Component({
     selector: "app-test",
@@ -24,7 +26,7 @@ export class TestComponent implements OnInit {
     selectProject: string = "";
     inputContent: string = '';
     configPath: string = '';
-    labelPosition: 'newone' | 'newtwo' | 'oldone' = 'newtwo';
+    labelPosition: 'version027' | 'version026'  = 'version027';
 
     updateMessage:string = "检查更新ing...";
     updateProcessDialog: string = "";
@@ -114,12 +116,17 @@ export class TestComponent implements OnInit {
             return
         }
         console.log(this.labelPosition);
-        switch (this.labelPosition) {
-            case 'newone': window['btnn'](); break;
-            case 'newtwo': btnnn(); break;
-            case 'oldone': window['btn'](); break;
-            default: window.alert("请选择生成方式！"); break;
-        }
+        // this.electron.childProcess.
+        let dia = this.dialog.open(CommonLoadingComponent,{width: '300px'});
+            
+        setTimeout(() => {
+            switch (this.labelPosition) {
+                case 'version026': btnnn026(); break;
+                case 'version027': btnnn(); break;
+                default: window.alert("请选择生成方式！"); break;
+            }
+            dia.close();
+        }, 100);  
     }
 
     public clickClose() {

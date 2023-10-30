@@ -11,6 +11,7 @@ declare var clickCreateConfig: any;
 declare var createList: any;
 declare var btnn: Function;
 declare var btnnn: Function;
+declare var btnnn026: Function;
 declare var Close: any;
 declare var startExport: any;
 declare var Taskbar: any;

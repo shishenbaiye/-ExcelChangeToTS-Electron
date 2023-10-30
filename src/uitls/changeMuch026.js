@@ -1,9 +1,4 @@
-
-const xlsxStr = ".xlsx"
-const xlsStr = ".xls"
-
-
-var btnnn = function () {
+var btnnn026 = function () {
     /**文件列表数组 */
     var allListArray = [];
     // Excel表格数据，一个元素就是一个Excel文件的数据
@@ -217,11 +212,11 @@ var btnnn = function () {
                                 break;
                             case "STRING": method += `string`
                                 break;
-                            case "VECTOR2": method += `mw.Vector2`
+                            case "VECTOR2": method += `Type.Vector2`
                                 break;
-                            case "VECTOR3": method += `mw.Vector`
+                            case "VECTOR3": method += `Type.Vector`
                                 break;
-                            case "VECTOR4": method += `mw.Vector4`
+                            case "VECTOR4": method += `Type.Vector4`
                                 break;
                             case "INT[]": method += `Array<number>`
                                 break;
@@ -243,11 +238,11 @@ var btnnn = function () {
                                 break;
                             case "BOOLEAN[][]": method += `Array<Array<boolean>>`
                                 break;
-                            case "VECTOR2[]": method += `mw.Vector2[],`
+                            case "VECTOR2[]": method += `Type.Vector2[],`
                                 break;
-                            case "VECTOR3[]": method += `mw.Vector[],`
+                            case "VECTOR3[]": method += `Type.Vector[],`
                                 break;
-                            case "VECTOR4[]": method += `mw.Vector4[],`
+                            case "VECTOR4[]": method += `Type.Vector4[],`
                                 break;
                             default:
                                 window.alert(`文件：${fileArray[index]}第1行第${i + 1}列变量类型填写有误，请检查后再转换！`)
@@ -279,11 +274,11 @@ var btnnn = function () {
                                 break;
                             case "STRING": method += `string,`
                                 break;
-                            case "VECTOR2": method += `mw.Vector2,`
+                            case "VECTOR2": method += `Type.Vector2,`
                                 break;
-                            case "VECTOR3": method += `mw.Vector,`
+                            case "VECTOR3": method += `Type.Vector,`
                                 break;
-                            case "VECTOR4": method += `mw.Vector4,`
+                            case "VECTOR4": method += `Type.Vector4,`
                                 break;
                             case "INT[]": method += `Array<number>,`
                                 break;
@@ -305,11 +300,11 @@ var btnnn = function () {
                                 break;
                             case "BOOLEAN[][]": method += `Array<Array<boolean>>,`
                                 break;
-                            case "VECTOR2[]": method += `mw.Vector2[],`
+                            case "VECTOR2[]": method += `Type.Vector2[],`
                                 break;
-                            case "VECTOR3[]": method += `mw.Vector[],`
+                            case "VECTOR3[]": method += `Type.Vector[],`
                                 break;
-                            case "VECTOR4[]": method += `mw.Vector4[],`
+                            case "VECTOR4[]": method += `Type.Vector4[],`
                                 break;
                             default:
                                 window.alert(`文件：${fileArray[index]}第1行第${i + 1}列变量类型填写有误，请检查后再转换！`);
@@ -560,7 +555,7 @@ var btnnn = function () {
     });
 
     fileArr = fileArray;
-    checklist(excelArray);
+    checklist026(excelArray);
     if (isreturn) {
         isreturn = false;
         return
@@ -580,9 +575,9 @@ var btnnn = function () {
             }
         }
         arrayContent.push(tablecontent);
-        arrayinterface.push(createAllforOne2(fileArray[index], objectArray[index], describeArray[index], methodArray[index]));
+        arrayinterface.push(createAllforOne2026(fileArray[index], objectArray[index], describeArray[index], methodArray[index]));
         arrayLanguage.push(createLanguageduo(excel, fileArray[index]));
-        dataTypeArrayCache.push(creatTypeCache(objectArray[index], fileArray[index], methodArray[index], cacheTableHeadTypeMap));
+        dataTypeArrayCache.push(creatTypeCache026(objectArray[index], fileArray[index], methodArray[index], cacheTableHeadTypeMap));
     })
 
     console.log("开始最终写文件步骤");
@@ -593,112 +588,19 @@ var btnnn = function () {
         }
     })
     /**创建configBase */
-    creatConfigBase()
+    creatConfigBase026();
     /**创建GameConfig */
-    creatGameConfig(allListArray);
+    creatGameConfig026(allListArray);
     /**创建每个表文件 */
-    creatTableFile(fileArray, arrayContent, arrayinterface, arrayLanguage);
+    creatTableFile026(fileArray, arrayContent, arrayinterface, arrayLanguage);
     /**创建表头类型缓存文件 */
-    cacheTableType(dataTypeArrayCache);
+    cacheTableType026(dataTypeArrayCache);
     content = "";
     window.alert("转换完成!感谢使用!")
 }
 
-/**
- * 初始化表头类型的缓存
- * 
- * */
-var initCache = function (cacheMap) {
-    const dataTypeCacheFilePath = `${outputDir}\\ConfigCache.json`
-    let oldCacheStr;
-    try {
-        oldCacheStr = fs.readFileSync(dataTypeCacheFilePath, 'utf-8');
-    } catch {
-        console.log("没有缓存文件，正在生成");
-        oldCacheStr = null;
-    }
-    let cacheJson = [];
-    if (oldCacheStr != null) {
-        cacheJson = JSON.parse(oldCacheStr);
-    }
-    for (let i = 0; i < cacheJson.length; i++) {
-        let element = cacheJson[i];
-        let table = element[0];
-        let names = element[1];
-        let types = element[2];
-        console.log("table:" + table);
-        for (let j = 0; j < types.length; j++) {
-            let name = names[j];
-            let type = types[j];
-            cacheMap.set(table + name, type);
-            console.log("    name:" + name);
-            console.log("    type:" + type);
-            console.log(`cachemap = ${cacheMap.get(table + name)}`);
-        }
-    }
-    console.log(`cachemap = ${cacheMap.keys}`);
-}
-
-//创建语言表便捷查询方法
-var createLanguageduo = function (excel, filename) {
-    let is = excel[3];
-    let index = null;
-    if (!!is) {
-        is.forEach((item, indexs) => {
-            if (item.toString().match("ReadByName")) {
-                index = indexs;
-            }
-        })
-
-        if (index != null) {
-            let content = '';
-            for (let i = 4; i < excel.length; i++) {
-                content += `\t/**${excel[i][3]}*/\n`;
-                content += `\tget ${excel[i][index]}():I${filename.replace(xlsxStr, "")}Element{return this.getElement(${excel[i][0]})};\n`
-            }
-            return content;
-        } else {
-            let content = '';
-            return content;
-        }
-    }
-}
-/**校验是否为新文件 */
-var ChecktableList = function (listArray) {
-    try {
-        let ListPath = path.join(__dirname, '../../../../');
-        let content = JSON.parse(fs.readFileSync(`${ListPath}Config\\tableList.json`, 'utf8', (err) => {
-            if (err) {
-                console.log(`出错了`);
-                window.alert(err);
-            }
-        }));
-        let newList = [];
-        newList = content.slice();
-        listArray.forEach((item) => {
-            if (content.length == 0) {
-                newList.push({ "name": item });
-            } else {
-                for (let i = 0; i < content.length; i++) {
-                    if (content[i].name == item) {
-                        console.log(`${item}已存在`);
-                        break;
-                    } else {
-                        if (i == content.length - 1) {
-                            newList.push({ "name": item });
-                        }
-                    }
-                }
-            }
-        })
-        fs.writeFileSync(`${ListPath}Config\\tableList.json`, JSON.stringify(newList));
-        return newList;
-    } catch (error) {
-        window.alert(error);
-    }
-}
 /**创建configBase */
-var creatConfigBase = function () {
+var creatConfigBase026 = function () {
     let content =
         `\n//元素的基类` +
         `\nexport interface IElementBase{` +
@@ -770,7 +672,7 @@ var creatConfigBase = function () {
         "\n\t}" +
         "\n\t//获取系统语言索引" +
         "\n\tprivate static getSystemLanguageIndex():number{" +
-        "\n\t\tlet language = LocaleUtil.getDefaultLocale().toString().toLowerCase();" +
+        "\n\t\tlet language = Util.LocaleUtil.getDefaultLocale().toString().toLowerCase();" +
         "\n\t\tif (!!language.match(\"en\")) {" +
         "\n\t\t\treturn 0;" +
         "\n\t\t}" +
@@ -838,7 +740,7 @@ var creatConfigBase = function () {
     console.log("ConfigBase.ts生成完毕");
 }
 /**创建GameConfig */
-var creatGameConfig = function (allfilename) {
+var creatGameConfig026 = function (allfilename) {
     let content = "";
     content += "import {ConfigBase, IElementBase} from \"./ConfigBase\";\n"
     allfilename.forEach((filename) => {
@@ -865,7 +767,7 @@ var creatGameConfig = function (allfilename) {
     console.log("GameConfig.ts生成完毕");
 }
 /**创建每个表文件 */
-var creatTableFile = function (filsArray, arrayData, interfaceData, arrayLanguage) {
+var creatTableFile026 = function (filsArray, arrayData, interfaceData, arrayLanguage) {
     //处理 坐标数组
     let arraydata = [];
     arrayData.forEach((item, index) => {
@@ -876,9 +778,9 @@ var creatTableFile = function (filsArray, arrayData, interfaceData, arrayLanguag
         let req2h = /\$2"/g
         let req3h = /\$3"/g
         let req4h = /\$4"/g
-        str = str.replace(req2q, "new mw.Vector2(");
-        str = str.replace(req3q, "new mw.Vector(");
-        str = str.replace(req4q, "new mw.Vector4(");
+        str = str.replace(req2q, "new Type.Vector2(");
+        str = str.replace(req3q, "new Type.Vector(");
+        str = str.replace(req4q, "new Type.Vector4(");
         str = str.replace(req2h, ")");
         str = str.replace(req3h, ")");
         str = str.replace(req4h, ")");
@@ -900,13 +802,13 @@ var creatTableFile = function (filsArray, arrayData, interfaceData, arrayLanguag
     })
 }
 
-var cacheTableType = function (ArrayCache) {
+var cacheTableType026 = function (ArrayCache) {
     fs.writeFileSync(`${outputDir}\\ConfigCache.json`, JSON.stringify(ArrayCache));
     console.warn(`CacheConfig.json生成完毕`);
 }
 
 /**创建interface数组 */
-var createAllforOne2 = function (filename, objectArray, describeArray, methodArray) {
+var createAllforOne2026 = function (filename, objectArray, describeArray, methodArray) {
     var temp = `export interface I${filename.replace(xlsxStr, "")}Element extends IElementBase{\n //ElementAttribute } `
     var method = "";
     objectArray = objectArray.split(',');
@@ -922,7 +824,7 @@ var createAllforOne2 = function (filename, objectArray, describeArray, methodArr
 }
 
 /**创建表头类型数组 */
-var creatTypeCache = function (objectArray, filename, methodArray, cacheMap) {
+var creatTypeCache026 = function (objectArray, filename, methodArray, cacheMap) {
     console.log(`====== creatTypeCache`);
     // cacheMap.forEach((data,index)=>{
     //     console.log(`cacheMap ==== ${data}`);
@@ -949,17 +851,17 @@ var creatTypeCache = function (objectArray, filename, methodArray, cacheMap) {
 }
 
 /**检查数据类型是否正确 */
-var checklist = function (excelArray) {
+var checklist026 = function (excelArray) {
     console.log(`====== checklist`);
     excelArray.forEach((excel, index) => {
         if (excel.length < 4) { return }
         for (i = 0; i < excel[0].length; i++) {
             switch (excel[0][i]) {
-                case "INT": check("int", i, excel, index);
+                case "INT": check026("int", i, excel, index);
                     break;
-                case "STRING": check("string", i, excel, index);
+                case "STRING": check026("string", i, excel, index);
                     break;
-                case "FLOAT": check("float", i, excel, index);
+                case "FLOAT": check026("float", i, excel, index);
             }
         }
         let map = new Map();
@@ -995,7 +897,7 @@ var checklist = function (excelArray) {
     })
 }
 
-var check = function (method, index, excel, indexs) {
+var check026 = function (method, index, excel, indexs) {
     if (method == "int") {
         for (j = 4; j < excel.length; j++) {
             if ((typeof excel[j][index]) == "number" || excel[j][index] == null) {

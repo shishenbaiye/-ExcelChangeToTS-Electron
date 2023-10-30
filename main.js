@@ -33,6 +33,7 @@ function CreatWindow() {
                 path.join(__dirname, 'src/uitls/changeScript.js'), 
                 path.join(__dirname, 'src/uitls/changeAll.js'), 
                 path.join(__dirname, 'src/uitls/changeMuch.js'),
+                path.join(__dirname, 'src/uitls/changeMuch026.js'),
                 path.join(__dirname, 'src/uitls/update.js'),
             ]
         }
